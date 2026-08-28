@@ -1,0 +1,2859 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <meta name="description" content="MaaSaathi – Comprehensive Maternity, Newborn Care, Cycle & Medical Guidance Companion for Desktop & Mobile." />
+  <title>MaaSaathi – Maternal & Newborn Care Companion</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800;900&family=Playfair+Display:ital,wght@0,600;0,700;1,600&display=swap" rel="stylesheet" />
+  <style>
+    /* =========================================================================
+       1. THEME TOKENS: LUXURY PASTEL & MATERNAL WELLNESS
+       ========================================================================= */
+    :root {
+      --rose-50: #fff0f5;
+      --rose-100: #ffe2eb;
+      --rose-200: #fecddc;
+      --rose-300: #fda4be;
+      --rose-400: #fb719b;
+      --rose-500: #f43f75;
+      --rose-600: #e11d5a;
+      --rose-700: #be1248;
+      
+      --purple-50: #f8f6ff;
+      --purple-100: #eee7fe;
+      --purple-200: #ded0fd;
+      --purple-300: #c4b0fa;
+      --purple-400: #a78bfa;
+      --purple-500: #9333ea;
+      --purple-600: #7e22ce;
+      --purple-700: #6b21a8;
+
+      --teal-50: #f0fdfa;
+      --teal-100: #ccfbf1;
+      --teal-500: #14b8a6;
+      --teal-700: #0f766e;
+
+      --amber-50: #fffbeb;
+      --amber-100: #fef3c7;
+      --amber-500: #f59e0b;
+      --amber-700: #b45309;
+
+      --blue-50: #f0f9ff;
+      --blue-100: #e0f2fe;
+      --blue-500: #0284c7;
+      --blue-700: #0369a1;
+
+      --dark-navy: #151329;
+      --navy-800: #262343;
+      --navy-700: #3b3761;
+      --gray-500: #686580;
+      --gray-400: #9a97b2;
+      --gray-200: #e8e6f2;
+      --gray-100: #f4f3fa;
+      --bg-cream: #faf7f9;
+
+      --font-main: 'Outfit', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      --font-serif: 'Playfair Display', Georgia, serif;
+
+      --radius-sm: 12px;
+      --radius-md: 18px;
+      --radius-lg: 26px;
+      --radius-xl: 34px;
+      --radius-full: 9999px;
+
+      --shadow-sm: 0 4px 14px rgba(139, 92, 246, 0.06);
+      --shadow-md: 0 8px 28px rgba(139, 92, 246, 0.09);
+      --shadow-lg: 0 16px 42px rgba(139, 92, 246, 0.13);
+      --shadow-purple: 0 10px 28px rgba(147, 51, 234, 0.26);
+      --shadow-pink: 0 10px 28px rgba(244, 63, 117, 0.24);
+
+      --transition: 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { font-size: 16px; scroll-behavior: smooth; }
+    body {
+      font-family: var(--font-main);
+      background: var(--bg-cream);
+      color: var(--dark-navy);
+      min-height: 100vh;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 8% 8%, rgba(254, 205, 220, 0.32) 0%, transparent 40%),
+        radial-gradient(circle at 92% 16%, rgba(222, 208, 253, 0.38) 0%, transparent 45%),
+        radial-gradient(circle at 50% 95%, rgba(254, 243, 199, 0.24) 0%, transparent 40%);
+      background-attachment: fixed;
+    }
+
+    button { font-family: var(--font-main); cursor: pointer; border: none; outline: none; }
+    input, select, textarea { font-family: var(--font-main); }
+    a { text-decoration: none; color: inherit; }
+
+    /* =========================================================================
+       2. RESPONSIVE TOP BAR & DESKTOP NAVBAR
+       ========================================================================= */
+    .top-bar {
+      position: sticky; top: 0; z-index: 120;
+      background: rgba(255, 255, 255, 0.92); backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(232, 230, 242, 0.85);
+      padding: 10px 24px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 16px;
+    }
+    .top-bar-inner {
+      max-width: 1200px; margin: 0 auto; width: 100%;
+      display: flex; align-items: center; justify-content: space-between; gap: 16px;
+    }
+    .top-bar-left { display: flex; align-items: center; gap: 12px; cursor: pointer; }
+    .avatar-wrapper {
+      position: relative; width: 44px; height: 44px; border-radius: 50%;
+      background: linear-gradient(135deg, #fbcfe8, #d8b4fe);
+      padding: 2px; flex-shrink: 0; box-shadow: var(--shadow-sm);
+    }
+    .avatar-img {
+      width: 100%; height: 100%; border-radius: 50%;
+      display: flex; align-items: center; justify-content: center;
+      background: white; font-size: 1.4rem;
+    }
+    .greeting-sub { font-size: 0.72rem; color: var(--gray-500); font-weight: 700; text-transform: uppercase; letter-spacing: 0.03em; }
+    .greeting-title { font-size: 1.15rem; font-weight: 800; color: var(--dark-navy); line-height: 1.15; }
+
+    /* Desktop Nav Links (Hidden on mobile, visible on desktop) */
+    .desktop-nav-menu { display: none; align-items: center; gap: 6px; }
+    .desktop-nav-link {
+      padding: 8px 14px; border-radius: var(--radius-full);
+      font-size: 0.84rem; font-weight: 700; color: var(--gray-500);
+      background: transparent; transition: var(--transition); cursor: pointer;
+      display: flex; align-items: center; gap: 6px;
+    }
+    .desktop-nav-link:hover { color: var(--purple-700); background: var(--purple-50); }
+    .desktop-nav-link.active {
+      background: linear-gradient(135deg, #a855f7, #9333ea);
+      color: white; box-shadow: var(--shadow-purple);
+    }
+
+    .top-bar-right { display: flex; align-items: center; gap: 8px; }
+    .mode-pill {
+      background: var(--purple-50); border: 1.5px solid var(--purple-200);
+      color: var(--purple-700); padding: 6px 14px; border-radius: var(--radius-full);
+      font-size: 0.78rem; font-weight: 700; display: flex; align-items: center; gap: 6px;
+      transition: var(--transition);
+    }
+    .mode-pill:hover { background: var(--purple-100); transform: translateY(-1px); }
+    .icon-btn-round {
+      width: 38px; height: 38px; border-radius: 50%; background: white;
+      border: 1px solid var(--gray-200); display: flex; align-items: center; justify-content: center;
+      font-size: 1.1rem; color: var(--navy-800); box-shadow: var(--shadow-sm); transition: var(--transition);
+    }
+    .icon-btn-round:hover { transform: scale(1.05); border-color: var(--purple-300); }
+
+    /* =========================================================================
+       3. RESPONSIVE LAYOUT CONTAINER
+       ========================================================================= */
+    .main-content {
+      flex: 1; padding: 18px 16px 120px;
+      margin: 0 auto; width: 100%; max-width: 540px;
+      transition: max-width 0.3s ease;
+    }
+
+    /* Desktop Wide Screen Adaptation (>= 900px) */
+    @media (min-width: 900px) {
+      .main-content { max-width: 1160px; padding: 26px 24px 80px; }
+      .desktop-nav-menu { display: flex; }
+      .bottom-nav { display: none !important; }
+      .desktop-grid-2col {
+        display: grid; grid-template-columns: 1.15fr 0.85fr; gap: 24px; align-items: start;
+      }
+      .desktop-grid-3col {
+        display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px;
+      }
+    }
+
+    /* Floating Bottom Dock (Mobile Only) */
+    .bottom-nav {
+      position: fixed; bottom: 12px; left: 50%; transform: translateX(-50%);
+      z-index: 100; width: calc(100% - 24px); max-width: 500px;
+      background: rgba(21, 19, 41, 0.94); backdrop-filter: blur(24px);
+      border-radius: 30px; padding: 8px 10px;
+      display: flex; justify-content: space-around; align-items: center;
+      box-shadow: 0 14px 38px rgba(21, 19, 41, 0.35);
+      border: 1px solid rgba(255, 255, 255, 0.12);
+    }
+    .nav-item {
+      display: flex; flex-direction: column; align-items: center; gap: 3px;
+      padding: 6px 6px; border-radius: 20px; cursor: pointer;
+      transition: var(--transition); background: none; border: none;
+      color: #9a97b2; min-width: 44px;
+    }
+    .nav-item.active {
+      color: #ffffff;
+      background: rgba(255, 255, 255, 0.14);
+    }
+    .nav-item .nav-icon { font-size: 1.2rem; transition: var(--transition); line-height: 1; }
+    .nav-item .nav-label { font-size: 0.6rem; font-weight: 700; letter-spacing: 0.02em; }
+    .nav-item.active .nav-icon { transform: scale(1.15); }
+    .nav-item:hover { color: #fecddc; }
+
+    /* Emergency Floating Action Button */
+    .emergency-fab {
+      position: fixed; bottom: 84px; right: 18px; z-index: 110;
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white; border: none; border-radius: var(--radius-full);
+      padding: 10px 18px; font-size: 0.78rem; font-weight: 800;
+      box-shadow: 0 6px 22px rgba(239, 68, 68, 0.45);
+      display: flex; align-items: center; gap: 6px;
+      transition: var(--transition); cursor: pointer;
+      animation: gentle-pulse 2.8s infinite;
+    }
+    @keyframes gentle-pulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 6px 22px rgba(239, 68, 68, 0.45); }
+      50% { transform: scale(1.04); box-shadow: 0 8px 30px rgba(239, 68, 68, 0.65), 0 0 0 6px rgba(239,68,68,0.12); }
+    }
+    @media (min-width: 900px) {
+      .emergency-fab { bottom: 24px; right: 28px; }
+    }
+
+    /* =========================================================================
+       4. CARDS & HERO SURFACES
+       ========================================================================= */
+    .card {
+      background: #ffffff; border-radius: var(--radius-lg); padding: 22px;
+      box-shadow: var(--shadow-sm); border: 1px solid rgba(232, 230, 242, 0.85);
+      margin-bottom: 18px; transition: var(--transition);
+      position: relative; overflow: hidden;
+    }
+    .card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+
+    /* Segmented Time Controls (Weeks / Months / Trimesters) */
+    .segment-bar {
+      display: flex; background: rgba(232, 230, 242, 0.6);
+      padding: 4px; border-radius: var(--radius-full);
+      margin: 10px 0 16px;
+    }
+    .segment-btn {
+      flex: 1; padding: 8px 14px; border-radius: var(--radius-full);
+      font-size: 0.82rem; font-weight: 700; color: var(--gray-500);
+      background: transparent; transition: var(--transition); text-align: center;
+    }
+    .segment-btn.active {
+      background: linear-gradient(135deg, #a855f7, #9333ea);
+      color: white; box-shadow: 0 4px 12px rgba(147, 51, 234, 0.25);
+    }
+
+    /* 3D Baby Hero Milestone Card (Image 1 Style) */
+    .baby-hero-card {
+      background: linear-gradient(135deg, #ffffff 0%, #faf5ff 50%, #fff0f5 100%);
+      border-radius: var(--radius-xl); padding: 24px;
+      border: 1px solid rgba(222, 208, 253, 0.65);
+      box-shadow: var(--shadow-md); margin-bottom: 18px;
+    }
+    .baby-hero-top { display: flex; justify-content: space-between; align-items: flex-start; }
+    .baby-hero-badge {
+      background: rgba(147, 51, 234, 0.1); color: var(--purple-700);
+      padding: 4px 14px; border-radius: var(--radius-full);
+      font-size: 0.76rem; font-weight: 800; display: inline-flex; align-items: center; gap: 4px;
+    }
+    .baby-hero-center {
+      display: flex; align-items: center; justify-content: center; gap: 20px;
+      margin: 18px 0; text-align: center;
+    }
+    .baby-3d-visual {
+      width: 118px; height: 118px; border-radius: 50%;
+      background: radial-gradient(circle at 35% 35%, #ffd6e0, #fbcfe8 60%, #e9d5ff 100%);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 3.8rem; box-shadow: 0 12px 30px rgba(244, 63, 117, 0.22);
+      animation: float-baby 4s ease-in-out infinite; flex-shrink: 0;
+    }
+    @keyframes float-baby {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-6px) scale(1.03); }
+    }
+    .stat-pill-box {
+      background: white; border-radius: var(--radius-md); padding: 14px 18px;
+      border: 1px solid var(--gray-200); box-shadow: var(--shadow-sm);
+      text-align: left; min-width: 125px;
+    }
+    .stat-pill-num { font-size: 1.8rem; font-weight: 900; color: var(--dark-navy); line-height: 1; }
+    .stat-pill-label { font-size: 0.72rem; color: var(--gray-500); font-weight: 700; text-transform: uppercase; margin-top: 3px; }
+
+    /* Timeline Slider Card */
+    .timeline-slider-card {
+      background: white; border-radius: var(--radius-lg); padding: 20px;
+      border: 1px solid var(--gray-200); margin-bottom: 18px; box-shadow: var(--shadow-sm);
+    }
+    .slider-track-container { position: relative; margin: 18px 0 10px; }
+    .slider-labels { display: flex; justify-content: space-between; font-size: 0.72rem; font-weight: 700; color: var(--gray-500); margin-bottom: 6px; }
+    .slider-bar {
+      width: 100%; height: 10px; border-radius: var(--radius-full);
+      background: #eee7fe; position: relative; overflow: hidden;
+    }
+    .slider-bar-fill {
+      height: 100%; border-radius: var(--radius-full);
+      background: linear-gradient(90deg, #c084fc, #9333ea, #f43f75);
+      transition: width 0.4s ease;
+    }
+    .timeline-milestones { display: flex; justify-content: space-between; margin-top: 10px; }
+    .milestone-dot {
+      display: flex; flex-direction: column; align-items: center; gap: 2px;
+      font-size: 0.7rem; font-weight: 700; color: var(--gray-400); cursor: pointer;
+    }
+    .milestone-dot.active { color: var(--purple-700); }
+    .milestone-dot.active .dot-circle { background: var(--purple-600); box-shadow: 0 0 0 3px rgba(147, 51, 234, 0.2); }
+    .dot-circle { width: 10px; height: 10px; border-radius: 50%; background: #ddd6fe; transition: var(--transition); }
+
+    /* 2x2 Grid of Floating Health Metrics (Image 1 Style) */
+    .health-metric-grid {
+      display: grid; grid-template-columns: repeat(2, 1fr); gap: 12px; margin-bottom: 18px;
+    }
+    .metric-card {
+      border-radius: var(--radius-md); padding: 16px;
+      transition: var(--transition); border: 1px solid transparent;
+      display: flex; flex-direction: column; justify-content: space-between; cursor: pointer;
+    }
+    .metric-card-purple {
+      background: linear-gradient(135deg, #a855f7 0%, #9333ea 100%);
+      color: white; box-shadow: var(--shadow-purple);
+    }
+    .metric-card-white {
+      background: white; color: var(--dark-navy);
+      border: 1px solid var(--gray-200); box-shadow: var(--shadow-sm);
+    }
+    .metric-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; }
+    .metric-icon-badge {
+      width: 34px; height: 34px; border-radius: 10px;
+      background: rgba(255, 255, 255, 0.22);
+      display: flex; align-items: center; justify-content: center; font-size: 1.15rem;
+    }
+    .metric-card-white .metric-icon-badge {
+      background: var(--purple-50); color: var(--purple-700);
+    }
+    .metric-status { font-size: 0.72rem; font-weight: 700; opacity: 0.9; display: flex; align-items: center; gap: 4px; }
+    .metric-value { font-size: 1.45rem; font-weight: 900; line-height: 1.1; margin-bottom: 2px; }
+    .metric-title { font-size: 0.88rem; font-weight: 800; }
+    .metric-unit { font-size: 0.72rem; font-weight: 600; opacity: 0.85; }
+
+    /* =========================================================================
+       5. FLO STYLE CYCLE WHEEL & CHIP SELECTORS (Image 2 & 3 Style)
+       ========================================================================= */
+    .cycle-wheel-container {
+      position: relative; width: 230px; height: 230px; margin: 20px auto 16px;
+      display: flex; align-items: center; justify-content: center;
+    }
+    .cycle-circle-outer {
+      width: 100%; height: 100%; border-radius: 50%;
+      border: 13px solid #fce7f3;
+      border-top-color: #f43f75; border-right-color: #a855f7; border-bottom-color: #38bdf8;
+      position: absolute; top: 0; left: 0;
+      animation: rotate-wheel 20s linear infinite;
+    }
+    @keyframes rotate-wheel { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    .cycle-circle-inner {
+      width: 175px; height: 175px; border-radius: 50%;
+      background: radial-gradient(circle, #ffffff 60%, #fff1f5 100%);
+      box-shadow: 0 8px 26px rgba(244, 63, 117, 0.18);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      text-align: center; z-index: 2;
+    }
+    .cycle-day-label { font-size: 0.78rem; font-weight: 700; color: var(--gray-500); text-transform: uppercase; }
+    .cycle-day-num { font-size: 2.3rem; font-weight: 900; color: var(--rose-600); line-height: 1; margin: 2px 0; }
+    .cycle-badge {
+      background: #fdf2f8; color: #db2777; border-radius: var(--radius-full);
+      padding: 3px 12px; font-size: 0.72rem; font-weight: 800;
+    }
+
+    /* Horizontal Calendar Day Strip */
+    .calendar-strip {
+      display: flex; gap: 8px; overflow-x: auto; padding: 4px 2px 12px;
+      margin-bottom: 18px; scrollbar-width: none;
+    }
+    .calendar-strip::-webkit-scrollbar { display: none; }
+    .cal-day-pill {
+      flex: 0 0 56px; height: 74px; border-radius: 20px;
+      background: white; border: 1.5px solid var(--gray-200);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 3px; cursor: pointer; transition: var(--transition);
+    }
+    .cal-day-pill.active {
+      background: linear-gradient(135deg, #262343, #151329);
+      color: white; border-color: transparent;
+      box-shadow: 0 8px 20px rgba(21, 19, 41, 0.25);
+    }
+    .cal-day-pill.period-day { border-color: #f43f75; background: #fff1f5; }
+    .cal-day-pill.ovulation-day { border-color: #0ea5e9; background: #f0f9ff; }
+    .cal-day-name { font-size: 0.68rem; font-weight: 700; color: inherit; opacity: 0.75; }
+    .cal-day-num { font-size: 1.18rem; font-weight: 800; color: inherit; }
+    .cal-dot-indicator { width: 5px; height: 5px; border-radius: 50%; background: #f43f75; margin-top: 2px; }
+
+    /* Categorized Logging Grid (Image 3 Style) */
+    .category-section-title {
+      font-size: 0.95rem; font-weight: 800; color: var(--dark-navy);
+      margin: 18px 0 10px; display: flex; justify-content: space-between; align-items: center;
+    }
+    .chip-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 14px;
+    }
+    .chip-card {
+      background: white; border: 1.5px solid var(--gray-200);
+      border-radius: var(--radius-md); padding: 12px 8px; text-align: center;
+      cursor: pointer; transition: var(--transition);
+      display: flex; flex-direction: column; align-items: center; gap: 6px;
+    }
+    .chip-card:hover { border-color: var(--purple-300); transform: translateY(-2px); }
+    .chip-card.selected {
+      background: #fbf8ff; border-color: var(--purple-500);
+      box-shadow: 0 4px 14px rgba(147, 51, 234, 0.15);
+    }
+    .chip-icon {
+      width: 36px; height: 36px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center; font-size: 1.2rem;
+    }
+    .chip-label { font-size: 0.72rem; font-weight: 700; color: var(--navy-800); line-height: 1.2; }
+
+    /* =========================================================================
+       6. BUTTONS, FORMS & BADGES
+       ========================================================================= */
+    .btn {
+      display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+      padding: 12px 22px; border-radius: var(--radius-full); font-size: 0.88rem;
+      font-weight: 800; transition: var(--transition); cursor: pointer; border: none;
+    }
+    .btn:active { transform: scale(0.97); }
+    .btn-primary {
+      background: linear-gradient(135deg, #a855f7, #9333ea);
+      color: white; box-shadow: var(--shadow-purple);
+    }
+    .btn-primary:hover { box-shadow: 0 12px 30px rgba(147, 51, 234, 0.38); transform: translateY(-1px); }
+    .btn-pink {
+      background: linear-gradient(135deg, #fb719b, #f43f75);
+      color: white; box-shadow: var(--shadow-pink);
+    }
+    .btn-secondary {
+      background: var(--purple-100); color: var(--purple-700);
+      border: 1px solid var(--purple-200);
+    }
+    .btn-secondary:hover { background: var(--purple-200); }
+    .btn-ghost {
+      background: var(--gray-100); color: var(--navy-800);
+      border: 1px solid var(--gray-200);
+    }
+    .btn-ghost:hover { background: var(--gray-200); }
+    .btn-danger {
+      background: linear-gradient(135deg, #ef4444, #dc2626);
+      color: white; box-shadow: 0 6px 20px rgba(239, 68, 68, 0.35);
+    }
+    .btn-teal {
+      background: linear-gradient(135deg, #14b8a6, #0d9488);
+      color: white; box-shadow: 0 6px 20px rgba(20, 184, 166, 0.25);
+    }
+    .btn-sm { padding: 7px 14px; font-size: 0.78rem; border-radius: var(--radius-full); }
+    .btn-lg { padding: 14px 28px; font-size: 0.96rem; border-radius: var(--radius-lg); }
+    .btn-full { width: 100%; }
+
+    .form-group { margin-bottom: 14px; }
+    .form-label { display: block; font-size: 0.82rem; font-weight: 700; color: var(--navy-800); margin-bottom: 6px; }
+    .form-input, .form-select, .form-textarea {
+      width: 100%; padding: 11px 16px; border-radius: var(--radius-md);
+      border: 1.5px solid var(--gray-200); font-size: 0.9rem;
+      background: white; color: var(--dark-navy); transition: var(--transition);
+    }
+    .form-input:focus, .form-select:focus, .form-textarea:focus {
+      border-color: var(--purple-400); outline: none; box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.15);
+    }
+    .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; }
+
+    /* Tabs Bar */
+    .tab-bar { display: flex; gap: 8px; overflow-x: auto; padding-bottom: 6px; margin-bottom: 16px; scrollbar-width: none; }
+    .tab-bar::-webkit-scrollbar { display: none; }
+    .tab-btn {
+      padding: 9px 18px; border-radius: var(--radius-full); font-size: 0.82rem; font-weight: 700;
+      white-space: nowrap; cursor: pointer; border: 1.5px solid var(--gray-200);
+      background: white; color: var(--gray-500); transition: var(--transition);
+    }
+    .tab-btn.active {
+      background: linear-gradient(135deg, #a855f7, #9333ea);
+      color: white; border-color: transparent; box-shadow: 0 4px 12px rgba(147, 51, 234, 0.25);
+    }
+
+    /* Modal Overlay & Sheet */
+    .modal-overlay {
+      position: fixed; inset: 0; background: rgba(21, 19, 41, 0.65); z-index: 300;
+      display: flex; align-items: flex-end; justify-content: center; padding: 14px;
+      backdrop-filter: blur(6px); animation: fadeIn 0.2s ease;
+    }
+    @media (min-width: 768px) {
+      .modal-overlay { align-items: center; }
+    }
+    .modal {
+      background: white; border-radius: 30px; width: 100%; max-width: 560px;
+      max-height: 90vh; overflow-y: auto; padding: 26px 22px; animation: slideUp 0.25s ease;
+    }
+    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    @keyframes slideUp { from { transform: translateY(30px); } to { transform: translateY(0); } }
+
+    /* Toast */
+    .toast-container { position: fixed; top: 70px; left: 50%; transform: translateX(-50%); z-index: 500; display: flex; flex-direction: column; gap: 8px; pointer-events: none; }
+    .toast {
+      background: var(--dark-navy); color: white; padding: 10px 20px; border-radius: var(--radius-full);
+      font-size: 0.84rem; font-weight: 700; box-shadow: var(--shadow-lg); animation: toastIn 0.25s ease;
+    }
+    .toast.success { background: #059669; }
+    .toast.error { background: #dc2626; }
+    @keyframes toastIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
+    /* Timeline Records List */
+    .timeline-item {
+      display: flex; gap: 12px; padding: 14px; border-radius: var(--radius-md);
+      background: #faf9fd; border: 1px solid var(--gray-200); margin-bottom: 10px;
+      align-items: flex-start;
+    }
+    .timeline-dot {
+      width: 38px; height: 38px; border-radius: 12px;
+      display: flex; align-items: center; justify-content: center; font-size: 1.25rem; flex-shrink: 0;
+    }
+    .timeline-content { flex: 1; }
+    .timeline-title { font-weight: 800; font-size: 0.94rem; color: var(--dark-navy); }
+    .timeline-meta { font-size: 0.76rem; color: var(--gray-500); margin-top: 2px; }
+
+    /* Water Tracker Pill */
+    .water-tracker { display: flex; justify-content: space-between; gap: 6px; margin-top: 10px; }
+    .water-cup {
+      flex: 1; height: 42px; border-radius: 12px; background: #e0f2fe;
+      border: 1.5px solid #bae6fd; display: flex; align-items: center; justify-content: center;
+      font-size: 1rem; cursor: pointer; transition: var(--transition); color: #0284c7; font-weight: 700;
+    }
+    .water-cup.filled { background: linear-gradient(135deg, #0284c7, #0369a1); color: white; border-color: transparent; }
+
+    /* Sukoon Breathing Circle */
+    .breath-box {
+      width: 140px; height: 140px; border-radius: 50%;
+      background: radial-gradient(circle, #fce7f3 30%, #ede9fe 100%);
+      margin: 18px auto; display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      transition: transform 4s ease-in-out;
+      box-shadow: 0 10px 30px rgba(167, 139, 250, 0.25);
+    }
+    .breath-box.expand { transform: scale(1.35); background: radial-gradient(circle, #dbeafe 30%, #fbcfe8 100%); }
+
+    /* Chat Elements */
+    .chat-container { display: flex; flex-direction: column; height: calc(100vh - 210px); min-height: 480px; }
+    .chat-messages { flex: 1; overflow-y: auto; padding: 10px 4px; display: flex; flex-direction: column; gap: 12px; }
+    .chat-bubble {
+      max-width: 86%; padding: 12px 16px; border-radius: 18px; font-size: 0.88rem; line-height: 1.55;
+      box-shadow: var(--shadow-sm);
+    }
+    .chat-bubble.user {
+      background: linear-gradient(135deg, #a855f7, #9333ea);
+      color: white; margin-left: auto; border-bottom-right-radius: 4px;
+    }
+    .chat-bubble.assistant {
+      background: white; border: 1px solid var(--purple-100);
+      color: var(--dark-navy); border-bottom-left-radius: 4px;
+    }
+    .chat-input-row { display: flex; gap: 8px; padding-top: 10px; }
+    .chat-input {
+      flex: 1; padding: 11px 16px; border-radius: var(--radius-full);
+      border: 1.5px solid var(--gray-200); font-size: 0.9rem;
+    }
+    .chat-action-btn {
+      width: 44px; height: 44px; border-radius: 50%; background: linear-gradient(135deg, #a855f7, #9333ea);
+      color: white; font-size: 1.1rem; display: flex; align-items: center; justify-content: center;
+      box-shadow: var(--shadow-purple); flex-shrink: 0;
+    }
+
+    /* Sound Synthesizer Grid */
+    .sound-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 12px; }
+    .sound-card {
+      background: white; border: 1.5px solid var(--gray-200); border-radius: var(--radius-md);
+      padding: 14px 10px; text-align: center; cursor: pointer; transition: var(--transition);
+    }
+    .sound-card.playing {
+      background: #f3e8ff; border-color: var(--purple-500); box-shadow: 0 4px 14px rgba(147, 51, 234, 0.2);
+    }
+
+    /* Health Hub Pillar Cards */
+    .pillar-card {
+      background: white; border-radius: var(--radius-lg); padding: 22px;
+      border: 1.5px solid var(--gray-200); margin-bottom: 18px;
+      box-shadow: var(--shadow-sm); transition: var(--transition);
+    }
+    .pillar-card:hover { border-color: var(--purple-300); box-shadow: var(--shadow-md); }
+    .pillar-header { display: flex; align-items: center; gap: 14px; margin-bottom: 14px; }
+    .pillar-icon-box {
+      width: 48px; height: 48px; border-radius: 16px;
+      display: flex; align-items: center; justify-content: center; font-size: 1.6rem;
+    }
+    .pillar-topic-badge {
+      display: inline-block; padding: 4px 10px; border-radius: var(--radius-full);
+      font-size: 0.72rem; font-weight: 800; margin-bottom: 4px;
+    }
+
+    /* Helper Utilities */
+    .flex { display: flex; } .items-center { align-items: center; } .justify-between { justify-content: space-between; }
+    .gap-6 { gap: 6px; } .gap-10 { gap: 10px; } .gap-14 { gap: 14px; }
+    .text-sm { font-size: 0.86rem; } .text-xs { font-size: 0.76rem; }
+    .text-muted { color: var(--gray-500); } .font-bold { font-weight: 800; }
+    .badge-pill { font-size: 0.72rem; font-weight: 800; padding: 3px 10px; border-radius: var(--radius-full); }
+    .badge-green { background: #d1fae5; color: #065f46; }
+    .badge-purple { background: #ede9fe; color: #5b21b6; }
+    .badge-pink { background: #fce7f3; color: #9d174d; }
+    .badge-amber { background: #fef3c7; color: #92400e; }
+    .badge-blue { background: #e0f2fe; color: #0369a1; }
+  </style>
+</head>
+<body>
+<div id="app">
+  <!-- Responsive Top Bar with Desktop Menu Navigation -->
+  <header class="top-bar">
+    <div class="top-bar-inner">
+      <div class="top-bar-left" onclick="navigate('home')">
+        <div class="avatar-wrapper">
+          <div class="avatar-img" id="user-avatar-icon">🌸</div>
+        </div>
+        <div>
+          <div class="greeting-sub" id="greeting-time-sub">Good Morning</div>
+          <div class="greeting-title" id="greeting-name-title">Hello Mummy! 🌸</div>
+        </div>
+      </div>
+
+      <!-- Desktop Navigation Menu (Visible on Wide Screens) -->
+      <nav class="desktop-nav-menu">
+        <button class="desktop-nav-link active" id="dnav-home" onclick="navigate('home')">🏡 Home</button>
+        <button class="desktop-nav-link" id="dnav-healthhub" onclick="navigate('healthhub')">📖 Medical Hub</button>
+        <button class="desktop-nav-link" id="dnav-cycle" onclick="navigate('cycle')">🌸 Cycle & TTC</button>
+        <button class="desktop-nav-link" id="dnav-calendar" onclick="navigate('calendar')">📅 Calendar</button>
+        <button class="desktop-nav-link" id="dnav-records" onclick="navigate('records')">📋 Doctor Records</button>
+        <button class="desktop-nav-link" id="dnav-community" onclick="navigate('community')">👥 Circles</button>
+        <button class="desktop-nav-link" id="dnav-utilities" onclick="navigate('utilities')">🛠️ Tools</button>
+        <button class="desktop-nav-link" id="dnav-chat" onclick="navigate('chat')">💬 Ask AI</button>
+      </nav>
+
+      <div class="top-bar-right">
+        <button class="mode-pill" id="mode-switcher-btn" onclick="openStageSwitcherModal()">
+          <span id="current-mode-icon">🌱</span> <span id="current-mode-label">Pregnant (W24)</span>
+        </button>
+        <button class="icon-btn-round" id="db-vault-btn" onclick="openDatabaseVaultModal()" title="Medical Database Vault (Records Stored)" style="position:relative;">
+          🗄️
+          <span id="db-status-dot" style="position:absolute; top:2px; right:2px; width:9px; height:9px; border-radius:50%; background:#10b981; border:2px solid #fff; box-shadow:0 0 6px #10b981;"></span>
+        </button>
+        <button class="icon-btn-round" onclick="toggleLanguage()" title="Switch Language">
+          🌐
+        </button>
+        <button class="icon-btn-round" onclick="openAISettingsModal()" title="AI API Keys">
+          ✨
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Dynamic Main Content Area -->
+  <main class="main-content" id="main-content">
+    <!-- Rendered dynamically by JavaScript -->
+  </main>
+
+  <!-- Floating Bottom Navigation Dock (Mobile Only) -->
+  <nav class="bottom-nav">
+    <button class="nav-item active" id="nav-home" onclick="navigate('home')">
+      <span class="nav-icon">🏡</span><span class="nav-label">Home</span>
+    </button>
+    <button class="nav-item" id="nav-healthhub" onclick="navigate('healthhub')">
+      <span class="nav-icon">📖</span><span class="nav-label">Guides</span>
+    </button>
+    <button class="nav-item" id="nav-cycle" onclick="navigate('cycle')">
+      <span class="nav-icon">🌸</span><span class="nav-label">Cycle</span>
+    </button>
+    <button class="nav-item" id="nav-calendar" onclick="navigate('calendar')">
+      <span class="nav-icon">📅</span><span class="nav-label">Calendar</span>
+    </button>
+    <button class="nav-item" id="nav-records" onclick="navigate('records')">
+      <span class="nav-icon">📋</span><span class="nav-label">Records</span>
+    </button>
+    <button class="nav-item" id="nav-community" onclick="navigate('community')">
+      <span class="nav-icon">👥</span><span class="nav-label">Circles</span>
+    </button>
+    <button class="nav-item" id="nav-utilities" onclick="navigate('utilities')">
+      <span class="nav-icon">🛠️</span><span class="nav-label">Tools</span>
+    </button>
+  </nav>
+
+  <!-- Persistent Emergency Help Button -->
+  <button class="emergency-fab" onclick="navigate('emergency')" aria-label="Emergency Care">
+    🆘 <span>Emergency</span>
+  </button>
+
+  <!-- Dynamic Toast Container -->
+  <div class="toast-container" id="toast-container"></div>
+
+  <!-- Dynamic Modal Overlay Container -->
+  <div id="modal-container"></div>
+</div>
+
+<script>
+// =========================================================================
+// 1. DATA PERSISTENCE & DATABASE VAULT LAYER (SQLite / Embedded DB + Cache)
+// =========================================================================
+const STORAGE_KEY = 'maasaathi_flo_v4';
+let DB_CONNECTED = false;
+let DB_LAST_SYNC = null;
+let syncDebounceTimer = null;
+
+function loadData() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) return JSON.parse(raw);
+  } catch(e) {}
+  return getDefaultData();
+}
+
+function saveData(syncNow = false) {
+  try {
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(APP));
+  } catch(e) {}
+
+  // Trigger debounced or immediate sync to persistent server database
+  if (syncNow) {
+    pushDataToDatabase();
+  } else {
+    clearTimeout(syncDebounceTimer);
+    syncDebounceTimer = setTimeout(pushDataToDatabase, 1200);
+  }
+}
+
+async function pushDataToDatabase() {
+  try {
+    const res = await fetch('/api/records/sync', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ userId: 'user_default', data: APP })
+    });
+    if (res.ok) {
+      const result = await res.json();
+      DB_CONNECTED = true;
+      DB_LAST_SYNC = new Date();
+      updateDbStatusDot(true);
+    }
+  } catch (err) {
+    // Graceful offline fallback
+    DB_CONNECTED = false;
+    updateDbStatusDot(false);
+  }
+}
+
+async function fetchDataFromDatabase(silent = false) {
+  try {
+    const res = await fetch('/api/records/all?userId=user_default');
+    if (res.ok) {
+      const json = await res.json();
+      if (json && json.data) {
+        // Deep merge or update state
+        APP = { ...APP, ...json.data };
+        localStorage.setItem(STORAGE_KEY, JSON.stringify(APP));
+        DB_CONNECTED = true;
+        DB_LAST_SYNC = new Date();
+        updateDbStatusDot(true);
+        if (!silent) {
+          showToast('Records synced with Medical Database! 🗄️', 'success');
+          renderCurrentPage();
+        }
+        return true;
+      }
+    }
+  } catch (err) {
+    DB_CONNECTED = false;
+    updateDbStatusDot(false);
+  }
+  return false;
+}
+
+function updateDbStatusDot(connected) {
+  const dot = document.getElementById('db-status-dot');
+  if (dot) {
+    if (connected) {
+      dot.style.background = '#10b981';
+      dot.style.boxShadow = '0 0 6px #10b981';
+    } else {
+      dot.style.background = '#f59e0b';
+      dot.style.boxShadow = '0 0 6px #f59e0b';
+    }
+  }
+}
+
+function uid() {
+  return Math.random().toString(36).substring(2, 10);
+}
+
+function getDefaultData() {
+  const d = new Date();
+  d.setDate(d.getDate() + 112); // ~24 weeks gestation default
+  return {
+    profile: {
+      name: 'Olivia Sharma',
+      status: 'pregnant', // 'trying' | 'pregnant' | 'postpartum'
+      edd: d.toISOString().split('T')[0],
+      cycleLength: 28,
+      periodLength: 5,
+      lastPeriodDate: new Date(Date.now() - 14 * 86400000).toISOString().split('T')[0],
+      bloodGroup: 'B Positive (B+)',
+      doctorName: 'Dr. Meera Joshi, MD (OB/GYN)',
+      hospitalName: 'Apollo Cradle Maternity Hospital',
+      ec_name: 'Rajesh Sharma (Spouse)',
+      ec_phone: '+91 98765 43210',
+      city: 'Mumbai'
+    },
+    // Doctor Appointments & History
+    appointments: [
+      {
+        id: 'apt-1',
+        title: 'Routine 24-Week Anomaly Scan & Glucose Check',
+        date: new Date(Date.now() + 5 * 86400000).toISOString().split('T')[0],
+        time: '10:30 AM',
+        doctor: 'Dr. Meera Joshi',
+        clinic: 'Apollo Cradle - Clinic #204',
+        type: 'Prenatal Checkup',
+        done: false,
+        notes: 'Review fetal anatomy scan, hemoglobin count, and discuss safe iron supplements.'
+      },
+      {
+        id: 'apt-0',
+        title: 'First Trimester NT Scan & Dual Marker',
+        date: new Date(Date.now() - 75 * 86400000).toISOString().split('T')[0],
+        time: '11:00 AM',
+        doctor: 'Dr. Meera Joshi',
+        clinic: 'Apollo Cradle Maternity',
+        type: 'Ultrasound Scan',
+        done: true,
+        notes: 'Fetal nasal bone visualized. NT 1.2mm (Normal). Low risk on dual marker screening.',
+        prescription: 'Folvite 5mg OD, Susten 200mg at bedtime'
+      }
+    ],
+    // Clinical Vitals & Lab Vault
+    clinicalRecords: [
+      { id: 'cr-1', type: 'Ultrasound Report', date: '2025-01-15', week: '12th Week', result: 'Single active fetus, CRL 58mm, FHR 156 bpm', status: 'Normal' },
+      { id: 'cr-2', type: 'Glucose Screening (OGTT)', date: '2025-02-10', week: '20th Week', result: 'Fasting: 82 mg/dL, 2-Hr: 118 mg/dL', status: 'Normal' },
+      { id: 'cr-3', type: 'Urine Test (Protein/pH)', date: '2025-02-22', week: '23rd Week', result: 'pH 5.2, Protein: Nil, Sugar: Nil', status: 'Normal' },
+      { id: 'cr-4', type: 'Blood Pressure Monitoring', date: '2025-02-25', week: '24th Week', result: '116 / 74 mmHg', status: 'Normal' }
+    ],
+    // Logged daily symptoms & categories
+    symptomLogs: [
+      { date: new Date().toISOString().split('T')[0], tags: ['Back pain', 'Fatigue', 'Happy'], notes: 'Mild evening lower back ache after desk work.' }
+    ],
+    // Kick sessions
+    kickSessions: [
+      { date: new Date().toISOString().split('T')[0], kicks: 10, durationMinutes: 18 }
+    ],
+    // Hydration
+    waterGlasses: 6,
+    waterDate: new Date().toISOString().split('T')[0],
+    // Questions for doctor
+    doctorQuestions: [
+      { id: 'dq-1', question: 'Is my baby weight gaining according to 50th percentile?', asked: false },
+      { id: 'dq-2', question: 'Can I continue gentle prenatal yoga in trimester 2?', asked: true }
+    ],
+    // Community discussions
+    forumPosts: [
+      { id: 'fp-1', club: 'Due in October 2025 Club', author: 'Pooja K.', title: 'Best belly moisturizers for itching?', replies: 14, likes: 28 },
+      { id: 'fp-2', club: 'First-Time Mamas Haven', author: 'Anita S.', title: 'How early did you feel distinct kicks?', replies: 32, likes: 51 }
+    ],
+    // Bag Checklist
+    checklists: getDefaultChecklists(),
+    chatMessages: [],
+    settings: {
+      language: 'en', // 'en' | 'hi'
+      geminiApiKey: '',
+      groqApiKey: '',
+      timelineView: 'weeks'
+    }
+  };
+}
+
+function getDefaultChecklists() {
+  return [
+    { id: 'hb1', cat: 'hospital', label: 'Aadhaar / ID Card & Maternity Insurance papers', done: true },
+    { id: 'hb2', cat: 'hospital', label: 'Previous Ultrasounds & Doctor prescription file', done: true },
+    { id: 'hb3', cat: 'hospital', label: '2-3 Front-open soft cotton nursing nightgowns', done: false },
+    { id: 'hb4', cat: 'hospital', label: 'High absorbency maternity pads & disposable panties', done: false },
+    { id: 'be1', cat: 'baby', label: '4-5 Washed pure cotton jhablas / onesies', done: false },
+    { id: 'be2', cat: 'baby', label: 'Soft mulmul swaddle wraps & newborn cap', done: true },
+    { id: 'be3', cat: 'baby', label: 'Alcohol-free water wipes & gentle diaper rash cream', done: false }
+  ];
+}
+
+let APP = loadData();
+
+// =========================================================================
+// 2. MILESTONE & PREGNANCY STAGES KNOWLEDGE
+// =========================================================================
+const BABY_GROWTH_STAGES = [
+  { week: 4, fruit: 'Poppy Seed', fruitHi: 'खसखस का दाना', sizeCm: '0.1 cm', weightG: '< 1 g', icon: '🌱', desc: 'Tiny amniotic sac and neural tube forming.' },
+  { week: 8, fruit: 'Raspberry', fruitHi: 'रसभरी', sizeCm: '1.6 cm', weightG: '1 g', icon: '🫐', desc: 'Tiny eyelids, webbed fingers and toes emerge.' },
+  { week: 12, fruit: 'Plump Lime', fruitHi: 'रसीला नींबू', sizeCm: '5.4 cm', weightG: '14 g', icon: '🍋', desc: 'Reflexes begin! Baby curls toes and swallows.' },
+  { week: 16, fruit: 'Creamy Avocado', fruitHi: 'एवोकैडो', sizeCm: '11.6 cm', weightG: '100 g', icon: '🥑', desc: 'Ears in position. Baby can hear your soothing heartbeat.' },
+  { week: 20, fruit: 'Sweet Banana', fruitHi: 'केला', sizeCm: '16.4 cm', weightG: '300 g', icon: '🍌', desc: 'Halfway! Baby does active somersaults and kicks.' },
+  { week: 24, fruit: 'Golden Papaya', fruitHi: 'पपीता', sizeCm: '30.0 cm', weightG: '600 g', icon: '🥭', desc: 'Lungs develop surfactant. Senses respond to sound & light.' },
+  { week: 28, fruit: 'Large Eggplant', fruitHi: 'बैंगन', sizeCm: '37.6 cm', weightG: '1000 g', icon: '🍆', desc: 'Third trimester begins! Baby blinks and dreams actively.' },
+  { week: 32, fruit: 'Juicy Coconut', fruitHi: 'नारियल', sizeCm: '42.4 cm', weightG: '1700 g', icon: '🥥', desc: 'Practicing breathing motions and accumulating soft fat.' },
+  { week: 36, fruit: 'Sweet Muskmelon', fruitHi: 'खरबूजा', sizeCm: '47.4 cm', weightG: '2600 g', icon: '🍈', desc: 'Lungs mature, baby shifts head down preparing for birth.' },
+  { week: 40, fruit: 'Watermelon', fruitHi: 'तरबूज', sizeCm: '51.2 cm', weightG: '3400 g', icon: '🍉', desc: 'Full term miracle ready to meet the loving world!' }
+];
+
+function getBabySizeForWeek(week) {
+  let closest = BABY_GROWTH_STAGES[0];
+  for (let s of BABY_GROWTH_STAGES) {
+    if (week >= s.week) closest = s;
+  }
+  return closest;
+}
+
+function calcPregnancyStats(edd) {
+  if (!edd) return { week: 24, completedWeeks: 24, remainingWeeks: 16, pct: 60, daysRemaining: 112, trimester: 'Second Trimester' };
+  const now = new Date();
+  const due = new Date(edd);
+  const diffDays = Math.round((due - now) / (1000 * 60 * 60 * 24));
+  const totalDays = 280;
+  const daysPregnant = Math.max(1, totalDays - diffDays);
+  const week = Math.max(1, Math.min(42, Math.ceil(daysPregnant / 7)));
+  const completedWeeks = Math.max(0, week - 1);
+  const remainingWeeks = Math.max(0, 40 - completedWeeks);
+  const pct = Math.max(1, Math.min(100, Math.round((daysPregnant / totalDays) * 100)));
+  const trimester = week <= 13 ? '1st Trimester' : week <= 27 ? '2nd Trimester' : '3rd Trimester';
+  return { week, completedWeeks, remainingWeeks, pct, daysRemaining: Math.max(0, diffDays), trimester };
+}
+
+function formatDate(dStr) {
+  if (!dStr) return '';
+  const d = new Date(dStr);
+  return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+}
+
+// =========================================================================
+// 3. NAVIGATION ROUTER (Desktop + Mobile Synced)
+// =========================================================================
+let currentPage = 'home';
+
+function navigate(page) {
+  currentPage = page;
+  // Update mobile bottom nav
+  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+  const targetMobile = document.getElementById('nav-' + page);
+  if (targetMobile) targetMobile.classList.add('active');
+
+  // Update desktop nav
+  document.querySelectorAll('.desktop-nav-link').forEach(el => el.classList.remove('active'));
+  const targetDesktop = document.getElementById('dnav-' + page);
+  if (targetDesktop) targetDesktop.classList.add('active');
+
+  renderCurrentPage();
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+}
+
+function renderCurrentPage() {
+  updateHeaderLabels();
+  const container = document.getElementById('main-content');
+  const routes = {
+    home: renderHome,
+    healthhub: renderHealthHub,
+    cycle: renderCycle,
+    calendar: renderCalendar,
+    records: renderRecords,
+    community: renderCommunity,
+    utilities: renderUtilities,
+    chat: renderChat,
+    emergency: renderEmergency
+  };
+  container.innerHTML = (routes[currentPage] || renderHome)();
+}
+
+function updateHeaderLabels() {
+  const p = APP.profile;
+  const hName = document.getElementById('greeting-name-title');
+  const hMode = document.getElementById('current-mode-label');
+  const hIcon = document.getElementById('current-mode-icon');
+  if (hName) hName.textContent = p?.name ? `Hello ${p.name.split(' ')[0]}! 🌸` : 'Hello Mummy! 🌸';
+  
+  if (hMode && hIcon) {
+    if (p.status === 'pregnant') {
+      const stats = calcPregnancyStats(p.edd);
+      hIcon.textContent = '🤰';
+      hMode.textContent = `Pregnant (W${stats.week})`;
+    } else if (p.status === 'trying') {
+      hIcon.textContent = '🌸';
+      hMode.textContent = 'Cycle & TTC';
+    } else {
+      hIcon.textContent = '🤱';
+      hMode.textContent = 'Postpartum';
+    }
+  }
+}
+
+// =========================================================================
+// 4. PAGE 1: HOME (Responsive Desktop & Mobile Layout)
+// =========================================================================
+function renderHome() {
+  const p = APP.profile;
+  const stats = calcPregnancyStats(p.edd);
+  const sizeInfo = getBabySizeForWeek(stats.week);
+  const viewMode = APP.settings.timelineView || 'weeks';
+  const nextApt = (APP.appointments || []).find(a => !a.done);
+
+  return `
+    <div class="desktop-grid-2col">
+      <!-- LEFT COLUMN: Baby Milestone Hero, Timeline & Metrics -->
+      <div>
+        <!-- Segmented Filter Bar -->
+        <div class="segment-bar">
+          <button class="segment-btn ${viewMode === 'weeks' ? 'active' : ''}" onclick="setTimelineView('weeks')">Weeks</button>
+          <button class="segment-btn ${viewMode === 'months' ? 'active' : ''}" onclick="setTimelineView('months')">Months</button>
+          <button class="segment-btn ${viewMode === 'trimesters' ? 'active' : ''}" onclick="setTimelineView('trimesters')">Trimesters</button>
+        </div>
+
+        <!-- 3D Baby Hero Milestone Card (Image 1 Style) -->
+        <div class="baby-hero-card">
+          <div class="baby-hero-top">
+            <div>
+              <span class="baby-hero-badge">✨ ${stats.trimester}</span>
+              <h2 style="font-size:1.4rem; font-weight:900; margin-top:6px; color:var(--dark-navy);">Pregnancy Journey</h2>
+            </div>
+            <button class="icon-btn-round" onclick="openSymptomModal()" title="Log Today's Symptoms">
+              ✏️
+            </button>
+          </div>
+
+          <div class="baby-hero-center">
+            <div class="stat-pill-box">
+              <div class="stat-pill-num">${String(stats.remainingWeeks).padStart(2, '0')}</div>
+              <div class="stat-pill-label">Remaining Weeks</div>
+            </div>
+
+            <div class="baby-3d-visual" title="Size of a ${sizeInfo.fruit}">
+              👶
+            </div>
+
+            <div class="stat-pill-box">
+              <div class="stat-pill-num">${String(stats.completedWeeks).padStart(2, '0')}</div>
+              <div class="stat-pill-label">Completed Weeks</div>
+            </div>
+          </div>
+
+          <div style="background:white; border-radius:var(--radius-md); padding:14px 18px; border:1px solid var(--gray-200); display:flex; align-items:center; gap:14px;">
+            <span style="font-size:2.2rem;">${sizeInfo.icon}</span>
+            <div>
+              <div class="text-xs text-muted font-bold" style="text-transform:uppercase;">Baby Size Equivalent</div>
+              <div style="font-size:1rem; font-weight:800; color:var(--purple-700);">${sizeInfo.fruit} (${sizeInfo.sizeCm} · ${sizeInfo.weightG})</div>
+              <div class="text-xs text-muted" style="margin-top:2px;">${sizeInfo.desc}</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Interactive Mother's Health Timeline Slider (Image 1 Style) -->
+        <div class="timeline-slider-card">
+          <div class="flex justify-between items-center">
+            <div>
+              <div style="font-size:1rem; font-weight:800; color:var(--dark-navy);">Mother's Health Monitor</div>
+              <div class="text-xs text-muted">Gestational Progression (${stats.week} Weeks)</div>
+            </div>
+            <span class="badge-pill badge-purple">${stats.pct}% Elapsed</span>
+          </div>
+
+          <div class="slider-track-container">
+            <div class="slider-labels">
+              <span>Week 1</span>
+              <span>Week 20</span>
+              <span>Week 40</span>
+            </div>
+            <div class="slider-bar">
+              <div class="slider-bar-fill" style="width: ${stats.pct}%;"></div>
+            </div>
+            <div class="timeline-milestones">
+              <div class="milestone-dot ${stats.week >= 12 ? 'active' : ''}" onclick="jumpToWeek(12)">
+                <div class="dot-circle"></div>
+                <span>12W</span>
+              </div>
+              <div class="milestone-dot ${stats.week >= 16 ? 'active' : ''}" onclick="jumpToWeek(16)">
+                <div class="dot-circle"></div>
+                <span>16W</span>
+              </div>
+              <div class="milestone-dot ${stats.week >= 20 ? 'active' : ''}" onclick="jumpToWeek(20)">
+                <div class="dot-circle"></div>
+                <span>20W</span>
+              </div>
+              <div class="milestone-dot ${stats.week >= 24 ? 'active' : ''}" onclick="jumpToWeek(24)">
+                <div class="dot-circle"></div>
+                <span>24W</span>
+              </div>
+              <div class="milestone-dot ${stats.week >= 28 ? 'active' : ''}" onclick="jumpToWeek(28)">
+                <div class="dot-circle"></div>
+                <span>28W</span>
+              </div>
+              <div class="milestone-dot ${stats.week >= 32 ? 'active' : ''}" onclick="jumpToWeek(32)">
+                <div class="dot-circle"></div>
+                <span>32W</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 2x2 Floating Health Metrics Grid (Image 1 Style) -->
+        <div class="health-metric-grid">
+          <div class="metric-card metric-card-purple" onclick="openSymptomModal()">
+            <div class="metric-header">
+              <div class="metric-icon-badge">🌸</div>
+              <div class="metric-status">● Normal</div>
+            </div>
+            <div>
+              <div class="metric-title" style="font-size:1.15rem; font-weight:800;">Back Pain</div>
+              <div class="metric-unit">Mild Lumbar Support</div>
+            </div>
+          </div>
+
+          <div class="metric-card metric-card-white" onclick="openSymptomModal()">
+            <div class="metric-header">
+              <div class="metric-icon-badge">⚡</div>
+              <div class="metric-status" style="color:#059669;">● Normal</div>
+            </div>
+            <div>
+              <div class="metric-title" style="font-size:1.15rem; font-weight:800;">Fatigue</div>
+              <div class="metric-unit text-muted">Trimester 2 Burst</div>
+            </div>
+          </div>
+
+          <div class="metric-card metric-card-white" onclick="navigate('records')">
+            <div class="metric-header">
+              <div class="metric-icon-badge">💓</div>
+              <div class="metric-status" style="color:#059669;">Resting</div>
+            </div>
+            <div>
+              <div class="metric-value">85 <span style="font-size:0.8rem; font-weight:600;">bpm</span></div>
+              <div class="metric-title text-muted">Maternal Pulse</div>
+            </div>
+          </div>
+
+          <div class="metric-card metric-card-purple" onclick="navigate('records')">
+            <div class="metric-header">
+              <div class="metric-icon-badge">🧪</div>
+              <div class="metric-status">pH 5.2</div>
+            </div>
+            <div>
+              <div class="metric-value">5.2 <span style="font-size:0.8rem; font-weight:600;">pH</span></div>
+              <div class="metric-title">Urine Test</div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- RIGHT COLUMN: Medical Hub Banners, Upcoming Visit, Hydration & Shortcuts -->
+      <div>
+        <!-- Featured Medical Guidance Hub Banner -->
+        <div class="card" style="background:linear-gradient(135deg, #f3e8ff 0%, #ffffff 70%, #fff1f5 100%); border:1.5px solid #ded0fd; padding:20px; cursor:pointer;" onclick="navigate('healthhub')">
+          <div class="flex justify-between items-center">
+            <span class="badge-pill badge-purple">✨ Medical Health Hub</span>
+            <span style="font-size:0.8rem; color:var(--purple-700); font-weight:800;">Explore All 4 Pillars →</span>
+          </div>
+          <div style="font-size:1.15rem; font-weight:900; color:var(--dark-navy); margin-top:8px;">
+            Maternal & Newborn Care Guidelines
+          </div>
+          <p class="text-xs text-muted" style="margin:4px 0 14px;">
+            Medically reviewed guides: Pregnancy Awareness, Vaccinations, Mother & Newborn Care, and Nutrition.
+          </p>
+          <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:8px;">
+            <div style="background:white; padding:8px 10px; border-radius:12px; border:1px solid var(--gray-200); font-size:0.78rem; font-weight:700;">
+              🤰 Pregnancy Health
+            </div>
+            <div style="background:white; padding:8px 10px; border-radius:12px; border:1px solid var(--gray-200); font-size:0.78rem; font-weight:700;">
+              💉 Vaccinations
+            </div>
+            <div style="background:white; padding:8px 10px; border-radius:12px; border:1px solid var(--gray-200); font-size:0.78rem; font-weight:700;">
+              🤱 Mother & Newborn
+            </div>
+            <div style="background:white; padding:8px 10px; border-radius:12px; border:1px solid var(--gray-200); font-size:0.78rem; font-weight:700;">
+              🥑 Maternal Diet
+            </div>
+          </div>
+        </div>
+
+        <!-- Next Appointment Card -->
+        <div class="card" style="padding:18px;">
+          <div class="flex justify-between items-center" style="margin-bottom:10px;">
+            <span class="font-bold text-sm" style="color:var(--dark-navy);">🩺 Next Doctor Visit</span>
+            <button class="btn btn-ghost btn-sm" onclick="navigate('records')">View History</button>
+          </div>
+          ${nextApt ? `
+            <div class="timeline-item" style="margin-bottom:0;">
+              <div class="timeline-dot" style="background:#ede9fe; color:#6b21a8;">👨‍⚕️</div>
+              <div class="timeline-content">
+                <div class="timeline-title">${nextApt.title}</div>
+                <div class="timeline-meta">🗓️ ${formatDate(nextApt.date)} at ${nextApt.time} · ${nextApt.doctor}</div>
+              </div>
+            </div>
+          ` : `
+            <div class="text-xs text-muted">No upcoming visits booked. <a href="javascript:void(0)" onclick="openAddAppointmentModal()" style="color:var(--purple-700); font-weight:700;">+ Book Visit</a></div>
+          `}
+        </div>
+
+        <!-- Clinical Lab Tests Quick Vault -->
+        <div class="card" style="padding:18px;">
+          <div class="flex justify-between items-center" style="margin-bottom:12px;">
+            <span class="font-bold text-sm" style="color:var(--dark-navy);">🔬 Clinical Tests</span>
+            <button class="btn btn-ghost btn-sm" onclick="navigate('records')">Open Vault</button>
+          </div>
+
+          <div class="timeline-item">
+            <div class="timeline-dot" style="background:#fee2e2; color:#ef4444;">🩸</div>
+            <div class="timeline-content">
+              <div class="timeline-title">Glucose Screening (OGTT)</div>
+              <div class="timeline-meta">Fasting: 82 mg/dL · 2-Hr: 118 mg/dL</div>
+            </div>
+            <span class="badge-pill badge-green">Normal</span>
+          </div>
+
+          <div class="timeline-item" style="margin-bottom:0;">
+            <div class="timeline-dot" style="background:#e0e7ff; color:#4338ca;">🩺</div>
+            <div class="timeline-content">
+              <div class="timeline-title">Blood Pressure Monitoring</div>
+              <div class="timeline-meta">116 / 74 mmHg (Optimal)</div>
+            </div>
+            <span class="badge-pill badge-green">Optimal</span>
+          </div>
+        </div>
+
+        <!-- Daily Hydration Companion -->
+        <div class="card" style="padding:18px;">
+          <div class="flex justify-between items-center">
+            <span class="font-bold text-sm" style="color:var(--teal-700);">💧 Hydration (8 Glasses Goal)</span>
+            <span class="text-xs font-bold" style="color:var(--teal-700);">${APP.waterGlasses || 0} / 8 Glasses</span>
+          </div>
+          <div class="water-tracker">
+            ${[1,2,3,4,5,6,7,8].map(i => `
+              <div class="water-cup ${(APP.waterGlasses || 0) >= i ? 'filled' : ''}" onclick="toggleWaterGlass(${i})">
+                ${(APP.waterGlasses || 0) >= i ? '💧' : i}
+              </div>
+            `).join('')}
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function setTimelineView(mode) {
+  APP.settings.timelineView = mode;
+  saveData();
+  renderCurrentPage();
+}
+
+function jumpToWeek(w) {
+  showToast(`Viewing Week ${w} milestones! 🌸`, 'success');
+}
+
+function toggleWaterGlass(num) {
+  APP.waterGlasses = APP.waterGlasses === num ? num - 1 : num;
+  saveData();
+  renderCurrentPage();
+  if (APP.waterGlasses === 8) {
+    showToast('🎉 Awesome! You reached your 8-glass hydration goal today!', 'success');
+  }
+}
+
+// =========================================================================
+// 5. PAGE 2: NEW DEDICATED MEDICAL HEALTH & CARE HUB (The 4 Core Pillars)
+// =========================================================================
+let activeHealthHubSection = 'all'; // 'all' | 'pregnancy' | 'vaccines' | 'mother_newborn' | 'nutrition'
+let healthSearchQuery = '';
+
+function renderHealthHub() {
+  return `
+    <!-- Top Header & Search Bar -->
+    <div style="margin-bottom:18px;">
+      <div class="flex justify-between items-center" style="flex-wrap:wrap; gap:10px;">
+        <div>
+          <h1 style="font-size:1.6rem; font-weight:900; color:var(--dark-navy);">📖 Maternal & Newborn Health Hub</h1>
+          <p class="text-xs text-muted">Medically reviewed clinical guidance across 4 specialized maternal pillars.</p>
+        </div>
+        <button class="btn btn-secondary btn-sm" onclick="exportMedicalGuidePDF()">
+          📥 Print / Save Guide
+        </button>
+      </div>
+
+      <!-- Quick Topic Search -->
+      <div style="margin-top:14px; display:flex; gap:8px;">
+        <input class="form-input" id="health-search-input" type="text" value="${healthSearchQuery}" placeholder="Search vaccines, warning signs, breastfeeding, nutrition..." oninput="healthSearchQuery=this.value.toLowerCase(); renderCurrentPage();" />
+      </div>
+    </div>
+
+    <!-- 4-Pillar Filter Segmented Tabs -->
+    <div class="tab-bar">
+      <button class="tab-btn ${activeHealthHubSection === 'all' ? 'active' : ''}" onclick="activeHealthHubSection='all'; renderCurrentPage();">
+        🌟 All 4 Pillars
+      </button>
+      <button class="tab-btn ${activeHealthHubSection === 'pregnancy' ? 'active' : ''}" onclick="activeHealthHubSection='pregnancy'; renderCurrentPage();">
+        🤰 1. Pregnancy Health Awareness
+      </button>
+      <button class="tab-btn ${activeHealthHubSection === 'vaccines' ? 'active' : ''}" onclick="activeHealthHubSection='vaccines'; renderCurrentPage();">
+        💉 2. Pregnancy Vaccination Awareness
+      </button>
+      <button class="tab-btn ${activeHealthHubSection === 'mother_newborn' ? 'active' : ''}" onclick="activeHealthHubSection='mother_newborn'; renderCurrentPage();">
+        🤱 3. Mother & Newborn Care
+      </button>
+      <button class="tab-btn ${activeHealthHubSection === 'nutrition' ? 'active' : ''}" onclick="activeHealthHubSection='nutrition'; renderCurrentPage();">
+        🥑 4. Maternal Nutrition Guidance
+      </button>
+    </div>
+
+    <!-- CONTENT GRID (Desktop: 2-column or 3-column / Mobile: 1-column) -->
+    <div class="desktop-grid-2col">
+      
+      <!-- ==========================================
+           PILLAR 1: PREGNANCY HEALTH AWARENESS
+           ========================================== -->
+      ${(activeHealthHubSection === 'all' || activeHealthHubSection === 'pregnancy') ? `
+        <div class="pillar-card">
+          <div class="pillar-header">
+            <div class="pillar-icon-box" style="background:#fce7f3; color:#db2777;">🤰</div>
+            <div>
+              <span class="pillar-topic-badge badge-pink">Pillar 1</span>
+              <h2 style="font-size:1.18rem; font-weight:900; color:var(--dark-navy);">Pregnancy Health Awareness</h2>
+            </div>
+          </div>
+
+          <!-- Section 1.1: Trimester Breakdown -->
+          <div style="background:#faf9fd; border-radius:var(--radius-md); padding:14px; margin-bottom:12px;">
+            <div class="font-bold text-sm" style="color:var(--rose-700); margin-bottom:4px;">🌱 Trimester Milestone Roadmap</div>
+            <ul style="padding-left:18px; font-size:0.84rem; line-height:1.65; color:var(--navy-800);">
+              <li><strong>1st Trimester (Weeks 1–13):</strong> Organogenesis phase. Neural tube closure, embryonic heartbeat. Common: Nausea, tender breasts, fatigue.</li>
+              <li><strong>2nd Trimester (Weeks 14–27):</strong> "Blooming Phase". Baby develops hearing, quickening kicks begin (18-22W). Anatomy anomaly scan at 20W.</li>
+              <li><strong>3rd Trimester (Weeks 28–40):</strong> Rapid lung surfactant maturation, head engages in pelvis, weight gain acceleration.</li>
+            </ul>
+          </div>
+
+          <!-- Section 1.2: Red Flag Danger Signs -->
+          <div style="background:#fff1f2; border:1.5px solid #fecdd3; border-radius:var(--radius-md); padding:14px; margin-bottom:12px;">
+            <div class="font-bold text-sm" style="color:#dc2626; margin-bottom:4px;">🚨 Critical Red-Flag Warning Signs (Seek Immediate Care)</div>
+            <ul style="padding-left:18px; font-size:0.82rem; line-height:1.6; color:#991b1b;">
+              <li>Sudden bright red vaginal bleeding or spotting.</li>
+              <li>Unexplained watery discharge (premature rupture of membranes).</li>
+              <li>Persistent severe headache with blurred vision or spots (signs of pre-eclampsia).</li>
+              <li>Sudden decrease in baby kick count (&lt; 10 kicks in 2 hours).</li>
+            </ul>
+          </div>
+
+          <!-- Section 1.3: Mental Wellbeing & Prenatal Exercise -->
+          <div style="font-size:0.84rem; line-height:1.6; color:var(--navy-800);">
+            <strong>Safe Movement & Rest:</strong> 30 minutes of gentle brisk walking, pelvic tilts, and prenatal yoga. Sleep on the left side with a pillow between knees to maximize uterine blood perfusion.
+          </div>
+        </div>
+      ` : ''}
+
+      <!-- ==========================================
+           PILLAR 2: PREGNANCY VACCINATION AWARENESS
+           ========================================== -->
+      ${(activeHealthHubSection === 'all' || activeHealthHubSection === 'vaccines') ? `
+        <div class="pillar-card">
+          <div class="pillar-header">
+            <div class="pillar-icon-box" style="background:#ede9fe; color:#6b21a8;">💉</div>
+            <div>
+              <span class="pillar-topic-badge badge-purple">Pillar 2</span>
+              <h2 style="font-size:1.18rem; font-weight:900; color:var(--dark-navy);">Pregnancy Vaccination Awareness</h2>
+            </div>
+          </div>
+
+          <div style="background:#f5f3ff; border-radius:var(--radius-md); padding:14px; margin-bottom:12px;">
+            <div class="font-bold text-sm" style="color:var(--purple-700); margin-bottom:6px;">💉 Recommended Maternal Vaccines (WHO & FOGSI Approved)</div>
+            <div style="display:flex; flex-direction:column; gap:8px; font-size:0.84rem;">
+              <div style="background:white; padding:10px 12px; border-radius:10px; border:1px solid var(--purple-200);">
+                <strong>1. Tdap (Tetanus, Diphtheria, Pertussis):</strong>
+                <div class="text-xs text-muted" style="margin-top:2px;">Administered between 27 and 36 weeks. Transfers antibodies across the placenta to protect your newborn against whooping cough before their first vaccine.</div>
+              </div>
+              <div style="background:white; padding:10px 12px; border-radius:10px; border:1px solid var(--purple-200);">
+                <strong>2. Inactivated Influenza (Flu Shot):</strong>
+                <div class="text-xs text-muted" style="margin-top:2px;">Safe at any trimester. Protects against severe maternal pneumonia, high fever complications, and premature labor.</div>
+              </div>
+              <div style="background:white; padding:10px 12px; border-radius:10px; border:1px solid var(--purple-200);">
+                <strong>3. Anti-D Immunoglobulin (Rhogam):</strong>
+                <div class="text-xs text-muted" style="margin-top:2px;">For Rh-negative mothers with Rh-positive partners. Given at 28 weeks to prevent maternal isoimmunization.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Contraindicated Warning -->
+          <div style="background:#fffbeb; border:1px solid #fef3c7; border-radius:var(--radius-md); padding:12px; font-size:0.82rem; color:#92400e;">
+            ⚠️ <strong>Vaccines to Avoid During Pregnancy:</strong> Live attenuated vaccines such as MMR (Measles, Mumps, Rubella), Varicella (Chickenpox), and Yellow Fever are contraindicated until after delivery.
+          </div>
+        </div>
+      ` : ''}
+
+      <!-- ==========================================
+           PILLAR 3: MOTHER AND NEWBORN CARE
+           ========================================== -->
+      ${(activeHealthHubSection === 'all' || activeHealthHubSection === 'mother_newborn') ? `
+        <div class="pillar-card">
+          <div class="pillar-header">
+            <div class="pillar-icon-box" style="background:#e0f2fe; color:#0369a1;">🤱</div>
+            <div>
+              <span class="pillar-topic-badge badge-blue">Pillar 3</span>
+              <h2 style="font-size:1.18rem; font-weight:900; color:var(--dark-navy);">Mother and Newborn Care</h2>
+            </div>
+          </div>
+
+          <!-- Section 3.1: Maternal Postpartum Healing -->
+          <div style="background:#f0f9ff; border-radius:var(--radius-md); padding:14px; margin-bottom:12px;">
+            <div class="font-bold text-sm" style="color:var(--blue-700); margin-bottom:4px;">🌸 Maternal Postpartum Recovery (The 4th Trimester)</div>
+            <ul style="padding-left:18px; font-size:0.84rem; line-height:1.65; color:var(--navy-800);">
+              <li><strong>Lochia Management:</strong> Normal postpartum discharge transitions from red (Rubra) to pinkish (Serosa) to yellowish-white (Alba) over 4-6 weeks.</li>
+              <li><strong>Incision & Perineal Healing:</strong> Keep surgical C-section wounds dry. Use warm sitz baths with plain water for vaginal episiotomy soothing.</li>
+              <li><strong>Pelvic Floor & Core:</strong> Begin gentle Kegels 2 weeks postpartum to strengthen pelvic stability and prevent urinary incontinence.</li>
+            </ul>
+          </div>
+
+          <!-- Section 3.2: Newborn Care Mastery -->
+          <div style="background:#faf9fd; border-radius:var(--radius-md); padding:14px; margin-bottom:12px;">
+            <div class="font-bold text-sm" style="color:var(--dark-navy); margin-bottom:4px;">👶 Newborn Essentials (First 30 Days)</div>
+            <ul style="padding-left:18px; font-size:0.84rem; line-height:1.65; color:var(--navy-800);">
+              <li><strong>Colostrum (Golden Milk):</strong> Thick, nutrient-dense first milk packed with secretory IgA antibodies that coat the baby's digestive tract.</li>
+              <li><strong>Kangaroo Mother Care (KMC):</strong> Direct skin-to-skin contact regulates newborn temperature, heart rate, and boosts maternal prolactin for lactation.</li>
+              <li><strong>Umbilical Cord Stump Care:</strong> Keep clean and dry without applying oils or powders until it naturally detaches within 7-14 days.</li>
+              <li><strong>Birth Dose Vaccines:</strong> BCG, Oral Polio Vaccine (OPV zero dose), and Hepatitis B within 24 hours of birth.</li>
+            </ul>
+          </div>
+        </div>
+      ` : ''}
+
+      <!-- ==========================================
+           PILLAR 4: MATERNAL NUTRITION GUIDANCE
+           ========================================== -->
+      ${(activeHealthHubSection === 'all' || activeHealthHubSection === 'nutrition') ? `
+        <div class="pillar-card">
+          <div class="pillar-header">
+            <div class="pillar-icon-box" style="background:#ccfbf1; color:#0f766e;">🥑</div>
+            <div>
+              <span class="pillar-topic-badge badge-green">Pillar 4</span>
+              <h2 style="font-size:1.18rem; font-weight:900; color:var(--dark-navy);">Maternal Nutrition Guidance</h2>
+            </div>
+          </div>
+
+          <!-- Section 4.1: Essential Micro-Nutrient Powerhouses -->
+          <div style="background:#f0fdfa; border-radius:var(--radius-md); padding:14px; margin-bottom:12px;">
+            <div class="font-bold text-sm" style="color:var(--teal-700); margin-bottom:6px;">🥗 Key Macro & Micronutrients</div>
+            <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:8px; font-size:0.82rem;">
+              <div style="background:white; padding:10px; border-radius:10px; border:1px solid var(--teal-200);">
+                <strong>Iron + Vitamin C</strong>
+                <div class="text-xs text-muted">Lentils, spinach, beetroots paired with lemon to prevent maternal anemia.</div>
+              </div>
+              <div style="background:white; padding:10px; border-radius:10px; border:1px solid var(--teal-200);">
+                <strong>Calcium + Vit D3</strong>
+                <div class="text-xs text-muted">Curd, milk, paneer, ragi for baby's bone and tooth buds.</div>
+              </div>
+              <div style="background:white; padding:10px; border-radius:10px; border:1px solid var(--teal-200);">
+                <strong>Folate (B9)</strong>
+                <div class="text-xs text-muted">Broccoli, beans, fortified grains for neural tube safety.</div>
+              </div>
+              <div style="background:white; padding:10px; border-radius:10px; border:1px solid var(--teal-200);">
+                <strong>DHA Omega-3</strong>
+                <div class="text-xs text-muted">Walnuts, chia seeds, flaxseed oil for fetal retina & brain growth.</div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Section 4.2: Traditional Dadi-Nani Superfoods -->
+          <div style="background:#faf9fd; border-radius:var(--radius-md); padding:14px; margin-bottom:12px;">
+            <div class="font-bold text-sm" style="color:var(--amber-700); margin-bottom:4px;">🥣 Time-Tested Traditional Recipes</div>
+            <ul style="padding-left:18px; font-size:0.82rem; line-height:1.6; color:var(--navy-800);">
+              <li><strong>Gond ke Ladoo (गोंद के लड्डू):</strong> Edible gum, ghee, and dry fruits to rebuild postpartum bone density and lactation strength.</li>
+              <li><strong>Ragi Sheera / Porridge:</strong> Supreme natural source of bioavailable calcium and iron.</li>
+              <li><strong>Roasted Makhana (Foxnuts):</strong> Light crunchy snack rich in magnesium to calm nocturnal leg cramps.</li>
+            </ul>
+          </div>
+
+          <!-- Section 4.3: Foods to Strictly Avoid -->
+          <div style="background:#fff1f2; border-radius:var(--radius-md); padding:12px; font-size:0.82rem; color:#991b1b;">
+            🚫 <strong>Foods to Strictly Avoid:</strong> Raw/unpasteurized milk and soft cheeses (Listeria risk), raw unripened papaya/pineapple in early trimesters, excess caffeine (&gt;200mg/day), raw or undercooked eggs/meat.
+          </div>
+        </div>
+      ` : ''}
+
+    </div>
+  `;
+}
+
+function exportMedicalGuidePDF() {
+  const text = `
+======================================================================
+MaaSaathi Maternal & Newborn Clinical Awareness Handbook
+======================================================================
+
+1. PREGNANCY HEALTH AWARENESS
+- Trimester Milestones (1st: Organogenesis, 2nd: Anomaly scan & kicks, 3rd: Lung maturity).
+- Red Flag Signs: Heavy bleeding, water breaking, severe headache, reduced fetal movement.
+- Safe Habits: Left side sleeping, 30 min gentle walk, hydration.
+
+2. PREGNANCY VACCINATION AWARENESS
+- Tdap Vaccine: Administered at 27-36 weeks to protect baby against whooping cough.
+- Inactivated Flu Shot: Safe in any trimester.
+- Anti-D Immunoglobulin: Given at 28 weeks for Rh-negative mothers.
+- Birth Doses for Baby: BCG, Oral Polio (OPV), Hepatitis B within 24 hours.
+
+3. MOTHER AND NEWBORN CARE
+- Postpartum Healing: Lochia transitions, sitz baths for perineal comfort, pelvic floor Kegels.
+- Breastfeeding Mastery: Colostrum protection, proper latching, feeding on demand.
+- Newborn Hygiene: Dry umbilical cord care, Kangaroo Mother Care (KMC).
+
+4. MATERNAL NUTRITION GUIDANCE
+- Key Nutrients: Iron + Vitamin C, Calcium + Vit D, Folate, Omega-3 DHA.
+- Superfoods: Gond Ladoo, Ragi porridge, Roasted Makhana, Coconut water.
+- Strict Avoidance: Unpasteurized dairy, raw papaya/pineapple in trimester 1, undercooked eggs.
+======================================================================
+Validated for maternal awareness by MaaSaathi Clinical Knowledge Base.
+`;
+  const blob = new Blob([text], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = 'MaaSaathi_Maternal_Health_Handbook.txt';
+  a.click();
+  showToast('Handbook downloaded successfully! 📖', 'success');
+}
+
+// =========================================================================
+// 6. PAGE 3: CYCLE & FERTILE WINDOW (Flo Inspo)
+// =========================================================================
+function renderCycle() {
+  const p = APP.profile;
+  const cycleDay = 14;
+
+  return `
+    <div class="desktop-grid-2col">
+      <div style="text-align:center;">
+        <h1 style="font-size:1.45rem; font-weight:900; color:var(--dark-navy);">Plan & Track Your Cycle</h1>
+        <p class="text-xs text-muted">Flo-style cycle predictions, ovulation windows & intimacy logs.</p>
+
+        <!-- Flo Circular Wheel (Image 2 & 3 Style) -->
+        <div class="cycle-wheel-container">
+          <div class="cycle-circle-outer"></div>
+          <div class="cycle-circle-inner">
+            <div class="cycle-day-label">Cycle Day</div>
+            <div class="cycle-day-num">${cycleDay}</div>
+            <span class="cycle-badge">🌸 Ovulation Day</span>
+          </div>
+        </div>
+
+        <div class="card" style="background:linear-gradient(135deg, #fdf2f8, #f5f3ff); border:1.5px solid #fbcfe8; text-align:center; padding:18px;">
+          <div class="text-xs font-bold text-muted" style="text-transform:uppercase;">Conception Probability</div>
+          <div style="font-size:1.6rem; font-weight:900; color:#db2777; margin:2px 0;">HIGH CHANCE 🔥</div>
+          <p class="text-xs text-muted">Today is in your peak fertile window (Day 12-16). Ideal time for conception.</p>
+          <div style="display:flex; justify-content:center; gap:8px; margin-top:14px;">
+            <button class="btn btn-pink btn-sm" onclick="openSymptomModal()">+ Log Symptoms</button>
+            <button class="btn btn-ghost btn-sm" onclick="showToast('Period dates synchronized! 🌸', 'success')">Edit Dates</button>
+          </div>
+        </div>
+      </div>
+
+      <div>
+        <div class="flex justify-between items-center" style="margin-bottom:12px;">
+          <span class="font-bold text-sm" style="color:var(--dark-navy);">💡 Daily Insights & Health Guides</span>
+          <button class="btn btn-ghost btn-sm" onclick="navigate('healthhub')">Explore Hub</button>
+        </div>
+
+        <div class="card" style="padding:16px; margin-bottom:12px; cursor:pointer;" onclick="showArticleModal('pms')">
+          <div class="flex items-center gap-12">
+            <span style="font-size:2.2rem;">🌸</span>
+            <div style="flex:1;">
+              <div style="font-size:0.95rem; font-weight:800; color:var(--dark-navy);">Tips to Relieve PMS Symptoms</div>
+              <div class="text-xs text-muted">Magnesium, warm compress, and gentle restorative yoga postures.</div>
+            </div>
+            <span class="badge-pill badge-pink">Guide</span>
+          </div>
+        </div>
+
+        <div class="card" style="padding:16px; margin-bottom:12px; cursor:pointer;" onclick="showArticleModal('early_signs')">
+          <div class="flex items-center gap-12">
+            <span style="font-size:2.2rem;">🤰</span>
+            <div style="flex:1;">
+              <div style="font-size:0.95rem; font-weight:800; color:var(--dark-navy);">9 Early Signs of Pregnancy</div>
+              <div class="text-xs text-muted">Implantation spotting vs period, tender breasts & basal temperature.</div>
+            </div>
+            <span class="badge-pill badge-purple">Doctor Read</span>
+          </div>
+        </div>
+
+        <div class="card" style="padding:16px; cursor:pointer;" onclick="showArticleModal('cramps')">
+          <div class="flex items-center gap-12">
+            <span style="font-size:2.2rem;">🍵</span>
+            <div style="flex:1;">
+              <div style="font-size:0.95rem; font-weight:800; color:var(--dark-navy);">Cramp Relief Roadmap</div>
+              <div class="text-xs text-muted">How warm ajwain tea and hydration naturally calm uterine spasms.</div>
+            </div>
+            <span class="badge-pill badge-amber">Holistic</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// =========================================================================
+// 7. PAGE 4: CALENDAR & DAILY DIARY
+// =========================================================================
+let selectedCalendarDate = new Date().toISOString().split('T')[0];
+
+function renderCalendar() {
+  const d = new Date();
+  const currentMonthName = d.toLocaleDateString('en-US', { month: 'long', year: 'numeric' });
+
+  const days = [];
+  for (let i = -3; i <= 3; i++) {
+    const cur = new Date();
+    cur.setDate(cur.getDate() + i);
+    days.push({
+      dateStr: cur.toISOString().split('T')[0],
+      dayNum: cur.getDate(),
+      dayName: cur.toLocaleDateString('en-US', { weekday: 'short' }),
+      isPeriod: i === -3 || i === -2,
+      isOvulation: i === 0
+    });
+  }
+
+  const aptForDate = (APP.appointments || []).filter(a => a.date === selectedCalendarDate);
+  const symForDate = (APP.symptomLogs || []).filter(s => s.date === selectedCalendarDate);
+
+  return `
+    <div class="desktop-grid-2col">
+      <div>
+        <div class="flex justify-between items-center" style="margin-bottom:12px;">
+          <div>
+            <h1 style="font-size:1.4rem; font-weight:900; color:var(--dark-navy);">${currentMonthName}</h1>
+            <div class="text-xs text-muted">Tap any day to view symptoms, visits & records</div>
+          </div>
+          <button class="btn btn-secondary btn-sm" onclick="openAddAppointmentModal()">+ Add Visit</button>
+        </div>
+
+        <div class="calendar-strip">
+          ${days.map(day => `
+            <div class="cal-day-pill ${day.dateStr === selectedCalendarDate ? 'active' : ''} ${day.isPeriod ? 'period-day' : ''} ${day.isOvulation ? 'ovulation-day' : ''}" onclick="selectCalendarDate('${day.dateStr}')">
+              <span class="cal-day-name">${day.dayName}</span>
+              <span class="cal-day-num">${day.dayNum}</span>
+              ${day.isPeriod ? '<div class="cal-dot-indicator"></div>' : day.isOvulation ? '<div class="cal-dot-indicator" style="background:#0ea5e9;"></div>' : ''}
+            </div>
+          `).join('')}
+        </div>
+      </div>
+
+      <div>
+        <div class="card card-lavender-glow" style="padding:20px;">
+          <div class="flex justify-between items-center" style="margin-bottom:14px;">
+            <span class="font-bold text-sm" style="color:var(--purple-700);">📅 Agenda for ${formatDate(selectedCalendarDate)}</span>
+            <button class="btn btn-ghost btn-sm" onclick="openSymptomModal()">+ Log Health</button>
+          </div>
+
+          ${aptForDate.length === 0 && symForDate.length === 0 ? `
+            <div style="text-align:center; padding:24px 10px; color:var(--gray-500);">
+              <div style="font-size:2.2rem; margin-bottom:6px;">✨</div>
+              <div class="text-sm font-bold">No events logged on this date</div>
+              <div class="text-xs text-muted" style="margin-top:4px;">Tap below to record symptoms or book an appointment.</div>
+              <div class="flex gap-10" style="justify-content:center; margin-top:14px;">
+                <button class="btn btn-pink btn-sm" onclick="openSymptomModal()">+ Log Symptoms</button>
+                <button class="btn btn-secondary btn-sm" onclick="openAddAppointmentModal()">+ Prenatal Visit</button>
+              </div>
+            </div>
+          ` : ''}
+
+          ${aptForDate.map(a => `
+            <div class="timeline-item">
+              <div class="timeline-dot" style="background:#ede9fe; color:#6b21a8;">🩺</div>
+              <div class="timeline-content">
+                <div class="timeline-title">${a.title}</div>
+                <div class="timeline-meta">${a.time} · ${a.doctor} (${a.clinic})</div>
+                ${a.notes ? `<div class="text-xs text-muted" style="margin-top:4px;">📝 ${a.notes}</div>` : ''}
+              </div>
+            </div>
+          `).join('')}
+
+          ${symForDate.map(s => `
+            <div class="timeline-item">
+              <div class="timeline-dot" style="background:#fce7f3; color:#db2777;">🌸</div>
+              <div class="timeline-content">
+                <div class="timeline-title">Logged Symptoms & Mood</div>
+                <div class="timeline-meta">${s.tags.join(' · ')}</div>
+                ${s.notes ? `<div class="text-xs text-muted" style="margin-top:4px;">"${s.notes}"</div>` : ''}
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function selectCalendarDate(dStr) {
+  selectedCalendarDate = dStr;
+  renderCurrentPage();
+}
+
+// =========================================================================
+// 8. PAGE 5: FULL USER RECORDS & DOCTOR APPOINTMENT HISTORY
+// =========================================================================
+let recordsSubTab = 'appointments';
+
+function renderRecords() {
+  const apts = APP.appointments || [];
+  const upcoming = apts.filter(a => !a.done);
+  const past = apts.filter(a => a.done);
+  const labs = APP.clinicalRecords || [];
+
+  return `
+    <div class="flex justify-between items-center" style="margin-bottom:16px; flex-wrap:wrap; gap:10px;">
+      <div>
+        <h1 style="font-size:1.45rem; font-weight:900; color:var(--dark-navy);">Medical Vault & Doctor History</h1>
+        <p class="text-xs text-muted">Complete health diary, lab tests & clinical consultations.</p>
+      </div>
+      <button class="btn btn-secondary btn-sm" onclick="exportMedicalReportPDF()" title="Print / Download Doctor Slip">
+        📥 Export Clinical Slip
+      </button>
+    </div>
+
+    <!-- Segmented Tab Switcher -->
+    <div class="tab-bar">
+      <button class="tab-btn ${recordsSubTab === 'appointments' ? 'active' : ''}" onclick="recordsSubTab='appointments'; renderCurrentPage();">
+        🩺 Doctor Visits (${upcoming.length} Upcoming)
+      </button>
+      <button class="tab-btn ${recordsSubTab === 'labs' ? 'active' : ''}" onclick="recordsSubTab='labs'; renderCurrentPage();">
+        🔬 Lab Vault & Vitals (${labs.length})
+      </button>
+      <button class="tab-btn ${recordsSubTab === 'questions' ? 'active' : ''}" onclick="recordsSubTab='questions'; renderCurrentPage();">
+        📋 Doctor Questions Checklist
+      </button>
+    </div>
+
+    <div class="desktop-grid-2col">
+      <!-- MAIN COLUMN -->
+      <div>
+        ${recordsSubTab === 'appointments' ? `
+          <div class="flex justify-between items-center" style="margin-bottom:12px;">
+            <span class="font-bold text-sm" style="color:var(--dark-navy);">Upcoming Appointments</span>
+            <button class="btn btn-primary btn-sm" onclick="openAddAppointmentModal()">+ Book / Add Visit</button>
+          </div>
+
+          ${upcoming.length === 0 ? `
+            <div class="card" style="text-align:center; padding:26px 12px;">
+              <div style="font-size:2.2rem; margin-bottom:6px;">🩺</div>
+              <div class="font-bold text-sm">No upcoming appointments booked.</div>
+              <div class="text-xs text-muted" style="margin-top:2px;">Schedule your next routine prenatal ultrasound or review.</div>
+              <button class="btn btn-primary btn-sm" style="margin-top:14px;" onclick="openAddAppointmentModal()">+ Add Next Checkup</button>
+            </div>
+          ` : upcoming.map(a => `
+            <div class="card" style="border-left:4px solid var(--purple-500); padding:18px;">
+              <div class="flex justify-between items-start">
+                <div>
+                  <span class="badge-pill badge-purple">${a.type || 'Prenatal Visit'}</span>
+                  <div style="font-size:1.05rem; font-weight:800; color:var(--dark-navy); margin-top:4px;">${a.title}</div>
+                  <div class="text-xs text-muted" style="margin-top:2px;">🗓️ ${formatDate(a.date)} at ${a.time || '10:30 AM'}</div>
+                  <div class="text-xs font-bold" style="color:var(--purple-700); margin-top:4px;">👨‍⚕️ ${a.doctor} · ${a.clinic}</div>
+                  ${a.notes ? `<div class="text-xs" style="margin-top:6px; background:#faf9fd; padding:6px 10px; border-radius:8px;">💡 Focus: ${a.notes}</div>` : ''}
+                </div>
+              </div>
+              <div class="flex gap-8" style="margin-top:14px;">
+                <button class="btn btn-teal btn-sm" onclick="markAppointmentDone('${a.id}')">✓ Mark Completed</button>
+                <button class="btn btn-ghost btn-sm" onclick="deleteAppointment('${a.id}')">Delete</button>
+              </div>
+            </div>
+          `).join('')}
+
+          <div class="section-heading" style="margin:22px 0 10px; font-weight:800; font-size:0.95rem; color:var(--dark-navy);">
+            Past Consultation History (${past.length})
+          </div>
+
+          ${past.map(a => `
+            <div class="card" style="opacity:0.95; padding:16px; background:#fbfbff;">
+              <div class="flex justify-between items-start">
+                <div>
+                  <span class="badge-pill badge-green">✓ Completed</span>
+                  <div style="font-size:0.95rem; font-weight:800; color:var(--dark-navy); margin-top:4px;">${a.title}</div>
+                  <div class="text-xs text-muted">${formatDate(a.date)} · ${a.doctor}</div>
+                  ${a.notes ? `<div class="text-xs" style="margin-top:6px;"><strong>Doctor Findings:</strong> ${a.notes}</div>` : ''}
+                  ${a.prescription ? `<div class="text-xs font-bold" style="color:var(--teal-700); margin-top:4px;">💊 Rx: ${a.prescription}</div>` : ''}
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        ` : ''}
+
+        ${recordsSubTab === 'labs' ? `
+          <div class="flex justify-between items-center" style="margin-bottom:12px;">
+            <span class="font-bold text-sm" style="color:var(--dark-navy);">Verified Clinical Records</span>
+            <button class="btn btn-primary btn-sm" onclick="openAddLabModal()">+ Add Lab Test</button>
+          </div>
+
+          ${labs.map(l => `
+            <div class="card" style="padding:18px;">
+              <div class="flex justify-between items-start">
+                <div class="flex items-center gap-10">
+                  <div style="width:42px; height:42px; border-radius:12px; background:#faf5ff; display:flex; align-items:center; justify-content:center; font-size:1.35rem;">
+                    ${l.type.includes('Ultrasound') ? '📷' : l.type.includes('Glucose') ? '🩸' : l.type.includes('Blood Pressure') ? '🩺' : '🧪'}
+                  </div>
+                  <div>
+                    <div style="font-size:0.98rem; font-weight:800; color:var(--dark-navy);">${l.type}</div>
+                    <div class="text-xs text-muted">${l.week} · ${formatDate(l.date)}</div>
+                  </div>
+                </div>
+                <span class="badge-pill badge-green">${l.status || 'Normal'}</span>
+              </div>
+              <div style="margin-top:12px; background:#faf9fd; padding:10px 14px; border-radius:10px; font-size:0.86rem; color:var(--navy-800);">
+                <strong>Clinical Result:</strong> ${l.result}
+              </div>
+            </div>
+          `).join('')}
+        ` : ''}
+
+        ${recordsSubTab === 'questions' ? `
+          <div class="card" style="padding:18px;">
+            <div class="flex justify-between items-center" style="margin-bottom:14px;">
+              <div>
+                <div style="font-size:0.98rem; font-weight:800; color:var(--dark-navy);">Questions for Your Obstetrician</div>
+                <div class="text-xs text-muted">Never forget an important doubt during your next visit.</div>
+              </div>
+            </div>
+
+            <div style="display:flex; gap:8px; margin-bottom:14px;">
+              <input class="form-input" id="new-dq-input" type="text" placeholder="Type a question for doctor..." onkeydown="if(event.key==='Enter') addDoctorQuestion()" />
+              <button class="btn btn-primary btn-sm" onclick="addDoctorQuestion()">+ Add</button>
+            </div>
+
+            ${(APP.doctorQuestions || []).map(q => `
+              <div style="display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--gray-100);">
+                <input type="checkbox" ${q.asked ? 'checked' : ''} onchange="toggleDoctorQuestion('${q.id}')" style="width:18px; height:18px; accent-color:var(--purple-600);" />
+                <span style="font-size:0.88rem; flex:1; ${q.asked ? 'text-decoration:line-through; color:var(--gray-400);' : 'color:var(--dark-navy); font-weight:600;'}">${q.question}</span>
+                <button class="btn btn-ghost btn-sm" style="padding:2px 6px;" onclick="deleteDoctorQuestion('${q.id}')">✕</button>
+              </div>
+            `).join('')}
+          </div>
+        ` : ''}
+      </div>
+
+      <!-- SIDEBAR SUMMARY & DATABASE VAULT COLUMN -->
+      <div>
+        <div class="card" style="background:#faf5ff; border:1px solid #ded0fd; margin-bottom:14px;">
+          <div class="font-bold text-sm" style="color:var(--purple-700); margin-bottom:8px;">📋 Clinical Profile Summary</div>
+          <div style="font-size:0.84rem; line-height:1.7; color:var(--dark-navy);">
+            <div><strong>Attending OB/GYN:</strong> ${APP.profile.doctorName}</div>
+            <div><strong>Delivery Hospital:</strong> ${APP.profile.hospitalName}</div>
+            <div><strong>Maternal Blood Group:</strong> ${APP.profile.bloodGroup}</div>
+            <div><strong>Emergency Contact:</strong> ${APP.profile.ec_name} (${APP.profile.ec_phone})</div>
+          </div>
+          <button class="btn btn-secondary btn-full btn-sm" style="margin-top:14px;" onclick="exportMedicalReportPDF()">
+            📥 Export Full Clinical Slip (.txt)
+          </button>
+        </div>
+
+        <div class="card" style="background:#f0fdf4; border:1px solid #bbf7d0;">
+          <div class="flex justify-between items-center" style="margin-bottom:8px;">
+            <div class="font-bold text-sm" style="color:#15803d;">🗄️ Patient Database Vault</div>
+            <span class="badge-pill badge-green">${DB_CONNECTED ? '🟢 Active' : '🟡 Local'}</span>
+          </div>
+          <div class="text-xs text-muted" style="line-height:1.5; margin-bottom:12px;">
+            Appointments, lab records, & consultations are stored persistently in the embedded database.
+          </div>
+          <div class="flex gap-6">
+            <button class="btn btn-primary btn-sm" style="flex:1;" onclick="openDatabaseVaultModal()">
+              ⚙️ Manage DB
+            </button>
+            <button class="btn btn-outline btn-sm" style="flex:1;" onclick="downloadDatabaseBackup()">
+              💾 Backup
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function markAppointmentDone(id) {
+  const apt = (APP.appointments || []).find(a => a.id === id);
+  if (apt) {
+    apt.done = true;
+    saveData();
+    showToast('Visit marked as completed! 🌸', 'success');
+    renderCurrentPage();
+  }
+}
+
+function deleteAppointment(id) {
+  APP.appointments = (APP.appointments || []).filter(a => a.id !== id);
+  saveData();
+  renderCurrentPage();
+}
+
+function addDoctorQuestion() {
+  const inp = document.getElementById('new-dq-input');
+  if (!inp || !inp.value.trim()) return;
+  APP.doctorQuestions = APP.doctorQuestions || [];
+  APP.doctorQuestions.push({ id: uid(), question: inp.value.trim(), asked: false });
+  saveData();
+  renderCurrentPage();
+}
+
+function toggleDoctorQuestion(id) {
+  const q = (APP.doctorQuestions || []).find(item => item.id === id);
+  if (q) q.asked = !q.asked;
+  saveData();
+  renderCurrentPage();
+}
+
+function deleteDoctorQuestion(id) {
+  APP.doctorQuestions = (APP.doctorQuestions || []).filter(item => item.id !== id);
+  saveData();
+  renderCurrentPage();
+}
+
+function exportMedicalReportPDF() {
+  const p = APP.profile;
+  const stats = calcPregnancyStats(p.edd);
+  const text = `
+=====================================================
+MaaSaathi Clinical Consultation & Maternal Summary
+=====================================================
+Mother's Name: ${p.name || 'Anonymous'}
+Gestational Stage: Week ${stats.week} (${stats.trimester})
+Estimated Due Date: ${formatDate(p.edd)}
+Blood Group: ${p.bloodGroup || 'B+'}
+Attending Doctor: ${p.doctorName}
+Emergency Contact: ${p.ec_name} (${p.ec_phone})
+
+--- RECENT CLINICAL TESTS ---
+${(APP.clinicalRecords || []).map(c => `- ${c.type} (${c.week}): ${c.result} [${c.status}]`).join('\n')}
+
+--- QUESTIONS TO DISCUSS WITH DOCTOR ---
+${(APP.doctorQuestions || []).filter(q => !q.asked).map(q => `[ ] ${q.question}`).join('\n')}
+=====================================================
+Generated safely with MaaSaathi Maternal Care Engine.
+`;
+  const blob = new Blob([text], { type: 'text/plain' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `MaaSaathi_Medical_Summary_${p.name.replace(/\s+/g, '_')}.txt`;
+  a.click();
+  showToast('Clinical slip exported successfully! 📋', 'success');
+}
+
+// =========================================================================
+// 9. PAGE 6: COMMUNITY CIRCLES & BIRTH CLUBS
+// =========================================================================
+function renderCommunity() {
+  const posts = APP.forumPosts || [];
+  return `
+    <div class="desktop-grid-2col">
+      <div>
+        <div class="page-header">
+          <h1 style="font-size:1.45rem; font-weight:900; color:var(--dark-navy);">👥 Community Birth Clubs</h1>
+          <p class="text-xs text-muted">Connect with moms in your exact month and learn from pediatricians.</p>
+        </div>
+
+        <div class="tab-bar">
+          <button class="tab-btn active">🌸 October 2025 Club</button>
+          <button class="tab-btn">👶 First-Time Moms</button>
+          <button class="tab-btn">🌱 TTC Hope Circle</button>
+          <button class="tab-btn">🤱 Postpartum Healing</button>
+        </div>
+
+        <div class="card" style="padding:18px;">
+          <div class="font-bold text-sm" style="color:var(--dark-navy); margin-bottom:10px;">Ask the Community</div>
+          <div style="display:flex; gap:8px;">
+            <input class="form-input" id="forum-input" type="text" placeholder="Share an experience or ask fellow moms..." />
+            <button class="btn btn-primary btn-sm" onclick="postToForum()">Post</button>
+          </div>
+        </div>
+
+        ${posts.map(p => `
+          <div class="card" style="padding:18px;">
+            <div class="flex justify-between items-start">
+              <div>
+                <span class="badge-pill badge-purple">${p.club}</span>
+                <div style="font-size:1rem; font-weight:800; color:var(--dark-navy); margin-top:6px;">${p.title}</div>
+                <div class="text-xs text-muted" style="margin-top:2px;">Started by ${p.author}</div>
+              </div>
+            </div>
+            <div class="flex justify-between items-center" style="margin-top:14px; border-top:1px solid var(--gray-100); padding-top:8px;">
+              <div class="text-xs font-bold" style="color:var(--purple-700);">💬 ${p.replies} Replies</div>
+              <button class="btn btn-ghost btn-sm" onclick="likePost('${p.id}')">❤️ ${p.likes} Likes</button>
+            </div>
+          </div>
+        `).join('')}
+      </div>
+
+      <div>
+        <div class="card" style="background:#faf5ff;">
+          <div class="font-bold text-sm" style="color:var(--purple-700); margin-bottom:8px;">🌟 Safe Community Guidelines</div>
+          <p class="text-xs text-muted" style="line-height:1.6;">
+            Our birth clubs are a warm, nurturing haven for empathy and shared parent experiences. Please never share private medical IDs and always consult your doctor for prescription doubts.
+          </p>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function postToForum() {
+  const inp = document.getElementById('forum-input');
+  if (!inp || !inp.value.trim()) return;
+  APP.forumPosts = APP.forumPosts || [];
+  APP.forumPosts.unshift({
+    id: uid(),
+    club: 'October 2025 Club',
+    author: APP.profile?.name || 'Fellow Mom',
+    title: inp.value.trim(),
+    replies: 1,
+    likes: 1
+  });
+  saveData();
+  showToast('Discussion published to Birth Club! 🌸', 'success');
+  renderCurrentPage();
+}
+
+function likePost(id) {
+  const p = (APP.forumPosts || []).find(item => item.id === id);
+  if (p) p.likes += 1;
+  saveData();
+  renderCurrentPage();
+}
+
+// =========================================================================
+// 10. PAGE 7: UTILITIES & SUKOON SANCTUARY
+// =========================================================================
+let isBreathingActive = false;
+let breathingInterval = null;
+let currentAudioSound = null;
+let audioCtx = null;
+let activeSoundNode = null;
+
+function renderUtilities() {
+  return `
+    <div class="desktop-grid-2col">
+      <div>
+        <div class="page-header">
+          <h1 style="font-size:1.45rem; font-weight:900; color:var(--dark-navy);">🛠️ Practical Utilities & Sukoon</h1>
+          <p class="text-xs text-muted">Contraction timers, baby kicks, delivery checklists & soothing audio.</p>
+        </div>
+
+        <!-- 1. Baby Kick Counter -->
+        <div class="card card-teal-fresh" style="text-align:center; padding:20px;">
+          <div class="font-bold text-sm" style="color:var(--teal-700);">👣 Baby Kick Session Counter</div>
+          <p class="text-xs text-muted">Rest on left side. Count 10 movements in a quiet 2-hour window.</p>
+          <div style="font-size:3.8rem; font-weight:900; color:var(--teal-700); margin:6px 0;" id="kick-count-num">${APP.tempKicks || 0}</div>
+          <div class="flex gap-10" style="justify-content:center;">
+            <button class="btn btn-teal btn-lg" onclick="countBabyKick()">👣 Count Kick</button>
+            <button class="btn btn-ghost" onclick="resetBabyKicks()">Reset</button>
+          </div>
+        </div>
+
+        <!-- 2. Sukoon 4-7-8 Breathing Guide -->
+        <div class="card" style="text-align:center; padding:20px;">
+          <div class="font-bold text-sm" style="color:var(--purple-700);">🌸 4-7-8 Restorative Breathing</div>
+          <p class="text-xs text-muted">Inhale calm, release stress. Sync your breath with the glowing circle.</p>
+          
+          <div class="breath-box" id="breath-circle">
+            <div id="breath-text" style="font-weight:900; font-size:1.15rem; color:var(--rose-600);">Inhale</div>
+            <div id="breath-sub" style="font-size:0.72rem; color:var(--gray-500);">Breathe in peace</div>
+          </div>
+
+          <button class="btn btn-secondary btn-sm" onclick="toggleBreathingGuide()">
+            ${isBreathingActive ? '⏹ Stop Guide' : '▶ Start Breathing'}
+          </button>
+        </div>
+      </div>
+
+      <div>
+        <!-- 3. Calming Audio Synthesizer -->
+        <div class="card" style="padding:20px;">
+          <div class="font-bold text-sm" style="color:var(--dark-navy);">🎵 Sukoon Soundscape Generator</div>
+          <div class="sound-grid">
+            <div class="sound-card ${currentAudioSound === 'heartbeat' ? 'playing' : ''}" onclick="playAudioTone('heartbeat')">
+              <div style="font-size:1.8rem;">💓</div>
+              <div style="font-size:0.88rem; font-weight:800; margin-top:4px;">Womb Pulse</div>
+              <div class="text-xs text-muted">72 bpm rhythm</div>
+            </div>
+            <div class="sound-card ${currentAudioSound === 'rain' ? 'playing' : ''}" onclick="playAudioTone('rain')">
+              <div style="font-size:1.8rem;">🌧️</div>
+              <div style="font-size:0.88rem; font-weight:800; margin-top:4px;">Monsoon Rain</div>
+              <div class="text-xs text-muted">Pink noise relaxation</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 4. Hospital Delivery Checklist -->
+        <div class="card" style="padding:20px;">
+          <div class="font-bold text-sm" style="color:var(--dark-navy); margin-bottom:10px;">🎒 Hospital Delivery Bag Checklist</div>
+          ${(APP.checklists || []).map(item => `
+            <div style="display:flex; align-items:center; gap:10px; padding:10px 0; border-bottom:1px solid var(--gray-100);">
+              <input type="checkbox" ${item.done ? 'checked' : ''} onchange="toggleCheckItem('${item.id}')" style="width:18px; height:18px; accent-color:var(--purple-600);" />
+              <span style="font-size:0.88rem; ${item.done ? 'text-decoration:line-through; color:var(--gray-400);' : 'color:var(--dark-navy);'}">${item.label}</span>
+            </div>
+          `).join('')}
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function countBabyKick() {
+  APP.tempKicks = (APP.tempKicks || 0) + 1;
+  renderCurrentPage();
+  if (APP.tempKicks === 10) {
+    showToast('🎉 10 kicks recorded! Baby is flourishing & active!', 'success');
+  }
+}
+
+function resetBabyKicks() {
+  APP.tempKicks = 0;
+  renderCurrentPage();
+}
+
+function toggleCheckItem(id) {
+  const item = (APP.checklists || []).find(i => i.id === id);
+  if (item) item.done = !item.done;
+  saveData();
+  renderCurrentPage();
+}
+
+function toggleBreathingGuide() {
+  const circle = document.getElementById('breath-circle');
+  const txt = document.getElementById('breath-text');
+  const sub = document.getElementById('breath-sub');
+  
+  if (isBreathingActive) {
+    clearInterval(breathingInterval);
+    isBreathingActive = false;
+    if (circle) circle.classList.remove('expand');
+    if (txt) txt.textContent = 'Inhale';
+    renderCurrentPage();
+    return;
+  }
+  
+  isBreathingActive = true;
+  let phase = 0;
+  function step() {
+    if (!circle) return;
+    if (phase === 0) {
+      circle.classList.add('expand');
+      txt.textContent = 'Inhale 🌸';
+      sub.textContent = 'Through nose (4s)';
+      phase = 1;
+    } else if (phase === 1) {
+      txt.textContent = 'Hold ✨';
+      sub.textContent = 'Hold gently (4s)';
+      phase = 2;
+    } else {
+      circle.classList.remove('expand');
+      txt.textContent = 'Exhale 🕊️';
+      sub.textContent = 'Release tension (4s)';
+      phase = 0;
+    }
+  }
+  step();
+  breathingInterval = setInterval(step, 4000);
+  renderCurrentPage();
+}
+
+function initAudio() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+}
+
+function playAudioTone(type) {
+  initAudio();
+  if (activeSoundNode) {
+    activeSoundNode.stop();
+    activeSoundNode = null;
+  }
+  if (currentAudioSound === type) {
+    currentAudioSound = null;
+    renderCurrentPage();
+    return;
+  }
+  currentAudioSound = type;
+  
+  if (type === 'heartbeat') {
+    const osc = audioCtx.createOscillator();
+    const gain = audioCtx.createGain();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(55, audioCtx.currentTime);
+    const lfo = audioCtx.createOscillator();
+    lfo.frequency.setValueAtTime(1.2, audioCtx.currentTime);
+    const lfoGain = audioCtx.createGain();
+    lfoGain.gain.setValueAtTime(0.8, audioCtx.currentTime);
+    lfo.connect(lfoGain);
+    lfoGain.connect(gain.gain);
+    osc.connect(gain);
+    gain.connect(audioCtx.destination);
+    osc.start();
+    lfo.start();
+    activeSoundNode = { stop: () => { osc.stop(); lfo.stop(); } };
+  } else if (type === 'rain') {
+    const bufferSize = audioCtx.sampleRate * 2;
+    const noiseBuffer = audioCtx.createBuffer(1, bufferSize, audioCtx.sampleRate);
+    const output = noiseBuffer.getChannelData(0);
+    for (let i = 0; i < bufferSize; i++) output[i] = (Math.random() * 2 - 1) * 0.12;
+    const whiteNoise = audioCtx.createBufferSource();
+    whiteNoise.buffer = noiseBuffer;
+    whiteNoise.loop = true;
+    const filter = audioCtx.createBiquadFilter();
+    filter.type = 'lowpass';
+    filter.frequency.setValueAtTime(700, audioCtx.currentTime);
+    whiteNoise.connect(filter);
+    filter.connect(audioCtx.destination);
+    whiteNoise.start();
+    activeSoundNode = { stop: () => whiteNoise.stop() };
+  }
+  renderCurrentPage();
+}
+
+// =========================================================================
+// 11. PAGE 8: ASK MAASAATHI AI CHAT
+// =========================================================================
+let chatLoading = false;
+
+function renderChat() {
+  const msgs = APP.chatMessages || [];
+  return `
+    <div class="page-header" style="margin-bottom:12px;">
+      <div class="flex justify-between items-center">
+        <div>
+          <h1 style="font-size:1.45rem; font-weight:900; color:var(--dark-navy);">💬 Ask MaaSaathi AI</h1>
+          <div class="text-xs text-muted">Empathetic maternal health assistant & pediatrician guidance.</div>
+        </div>
+        <button class="btn btn-ghost btn-sm" onclick="openAISettingsModal()">⚙️ API Key</button>
+      </div>
+    </div>
+
+    <div class="chat-container">
+      <div class="chat-messages" id="chat-messages">
+        ${msgs.length === 0 ? `
+          <div style="text-align:center; padding:36px 10px; color:var(--gray-500);">
+            <div style="font-size:3.2rem; margin-bottom:8px;">🌸</div>
+            <div class="font-bold" style="color:var(--dark-navy);">Hello Dear Maa!</div>
+            <div class="text-xs" style="margin-top:4px;">Ask me about nutrition, ultrasound tests, baby movement, or vaccines.</div>
+            <div style="display:flex; flex-wrap:wrap; gap:8px; justify-content:center; margin-top:18px;">
+              <button class="tab-btn" onclick="sendQuickChat('What are normal glucose ranges in pregnancy?')">🩸 Glucose Normal Range?</button>
+              <button class="tab-btn" onclick="sendQuickChat('When should I take the Tdap vaccine in pregnancy?')">💉 When to take Tdap vaccine?</button>
+              <button class="tab-btn" onclick="sendQuickChat('What foods boost fetal brain growth in Week 24?')">🥑 Week 24 Nutrition</button>
+            </div>
+          </div>
+        ` : msgs.map(m => `
+          <div class="chat-bubble ${m.role}">
+            ${m.content.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>')}
+          </div>
+        `).join('')}
+        ${chatLoading ? `
+          <div class="chat-bubble assistant" style="display:inline-flex; align-items:center; gap:8px;">
+            <span>🌸 Thinking with love…</span>
+          </div>
+        ` : ''}
+      </div>
+
+      <div class="chat-input-row">
+        <input class="chat-input" id="chat-input" type="text" placeholder="Ask about symptoms, tests, diet, vaccines..." onkeydown="if(event.key==='Enter') sendChatMessage()" />
+        <button class="chat-action-btn" onclick="sendChatMessage()">➤</button>
+      </div>
+    </div>
+  `;
+}
+
+function sendQuickChat(text) {
+  const inp = document.getElementById('chat-input');
+  if (inp) {
+    inp.value = text;
+    sendChatMessage();
+  }
+}
+
+async function sendChatMessage() {
+  const inp = document.getElementById('chat-input');
+  if (!inp || !inp.value.trim() || chatLoading) return;
+  const userText = inp.value.trim();
+  inp.value = '';
+  APP.chatMessages = APP.chatMessages || [];
+  APP.chatMessages.push({ role: 'user', content: userText });
+  chatLoading = true;
+  saveData();
+  renderCurrentPage();
+
+  const scrollChat = () => {
+    const el = document.getElementById('chat-messages');
+    if (el) el.scrollTop = el.scrollHeight;
+  };
+  scrollChat();
+
+  let reply = '';
+  try {
+    const res = await fetch('/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        message: userText,
+        language: APP.settings?.language || 'en',
+        userId: 'user_default',
+        context: {
+          name: APP.profile?.name,
+          pregnancyStatus: APP.profile?.status,
+          currentWeek: calcPregnancyStats(APP.profile?.edd)?.week,
+          estimatedDueDate: APP.profile?.edd,
+          upcomingAppointment: (APP.appointments || []).find(a => !a.done),
+          recentSymptoms: (APP.symptomLogs || []).slice(0, 3).map(s => ({ description: `${s.tags?.join(', ')} (${s.notes || ''})` }))
+        }
+      })
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      reply = data.reply;
+    }
+  } catch (e) {
+    console.warn('Backend chat API offline, using intelligent local engine:', e);
+  }
+
+  // Fallback response if API was unreachable or returned empty
+  if (!reply) {
+    reply = "Dear Maa, every pregnancy journey is unique! Keep yourself well-hydrated, take your prescribed prenatal vitamins, and consult your obstetrician for personalized clinical reviews. 🌸";
+    if (userText.toLowerCase().includes('tdap') || userText.toLowerCase().includes('vaccine') || userText.toLowerCase().includes('टीका')) {
+      reply = "The **Tdap vaccine** is recommended between **27 and 36 weeks** of each pregnancy. It safely transfers whooping cough antibodies to your newborn baby before their first pediatric vaccine! 💉";
+    } else if (userText.toLowerCase().includes('glucose') || userText.toLowerCase().includes('sugar')) {
+      reply = "A standard 2-hour Oral Glucose Tolerance Test (OGTT) typically targets a fasting level under 92 mg/dL and 2-hour level under 140 mg/dL. Always confirm specific diagnostic thresholds with your doctor's lab. 🩸";
+    } else if (userText.toLowerCase().includes('back') || userText.toLowerCase().includes('pain')) {
+      reply = "Lower back discomfort is common around Week 24 as your center of gravity shifts. Using a maternity pillow between your knees while sleeping on your left side and practicing cat-cow stretches provides wonderful relief! 🌸";
+    } else if (userText.toLowerCase().includes('kick') || userText.toLowerCase().includes('movement')) {
+      reply = "Around Week 24, babies develop active sleep-wake cycles. Count 10 distinct kicks or rolls within 2 hours while relaxing on your left side. 👣";
+    }
+  }
+
+  APP.chatMessages.push({ role: 'assistant', content: reply });
+  chatLoading = false;
+  saveData();
+  renderCurrentPage();
+  scrollChat();
+}
+
+// =========================================================================
+// 12. PAGE 9: EMERGENCY CARE
+// =========================================================================
+function renderEmergency() {
+  const p = APP.profile;
+  return `
+    <div class="page-header">
+      <h1 style="font-size:1.45rem; font-weight:900; color:#dc2626;">🚨 Emergency Care & Helpline</h1>
+      <p class="text-xs text-muted">Immediate response contacts and nearest verified emergency maternity centres.</p>
+    </div>
+
+    <div class="card" style="background:#fff1f2; border:2px solid #f87171; padding:24px;">
+      <div style="font-size:1.15rem; font-weight:900; color:#dc2626; margin-bottom:8px;">⚠️ Immediate Warning Signs</div>
+      <ul style="padding-left:20px; font-size:0.88rem; line-height:1.75; color:#991b1b;">
+        <li>Heavy vaginal bleeding or sudden fluid leakage</li>
+        <li>Severe continuous abdominal cramping</li>
+        <li>Sudden swelling of face/hands with visual blurriness</li>
+        <li>Marked decrease in baby kicks over 24 hours</li>
+      </ul>
+      <div style="display:flex; flex-direction:column; gap:12px; margin-top:20px;">
+        <a href="tel:112" class="btn btn-danger btn-lg btn-full">📞 Call National Emergency (112)</a>
+        ${p?.ec_phone ? `<a href="tel:${p.ec_phone}" class="btn btn-danger btn-lg btn-full" style="background:#991b1b;">📱 Call Family: ${p.ec_name}</a>` : ''}
+      </div>
+    </div>
+  `;
+}
+
+// =========================================================================
+// 13. MODALS (Symptom Logging, Add Appointment, Add Lab, AI Keys)
+// =========================================================================
+function openSymptomModal() {
+  const modal = document.getElementById('modal-container');
+  modal.innerHTML = `
+    <div class="modal-overlay" onclick="closeModal(event)">
+      <div class="modal" onclick="event.stopPropagation()">
+        <div class="flex justify-between items-center" style="margin-bottom:14px;">
+          <h2 style="font-size:1.25rem; font-weight:900; color:var(--dark-navy);">✏️ Log Symptoms & Lifestyle</h2>
+          <button class="btn btn-ghost btn-sm" onclick="closeModal()">✕</button>
+        </div>
+
+        <div class="category-section-title">Sex & Intimacy</div>
+        <div class="chip-grid">
+          <div class="chip-card" onclick="toggleChip(this, 'Didn\'t have sex')">
+            <div class="chip-icon" style="background:#fee2e2;">🚫</div>
+            <span class="chip-label">Didn't have sex</span>
+          </div>
+          <div class="chip-card selected" onclick="toggleChip(this, 'Protected sex')">
+            <div class="chip-icon" style="background:#fef3c7;">🛡️</div>
+            <span class="chip-label">Protected sex</span>
+          </div>
+          <div class="chip-card" onclick="toggleChip(this, 'High sex drive')">
+            <div class="chip-icon" style="background:#dcfce7;">✨</div>
+            <span class="chip-label">High drive</span>
+          </div>
+        </div>
+
+        <div class="category-section-title">Mood & Emotion</div>
+        <div class="chip-grid">
+          <div class="chip-card selected" onclick="toggleChip(this, 'Happy')">
+            <div class="chip-icon" style="background:#fef3c7;">😊</div>
+            <span class="chip-label">Happy</span>
+          </div>
+          <div class="chip-card" onclick="toggleChip(this, 'Calm')">
+            <div class="chip-icon" style="background:#e0f2fe;">🧘</div>
+            <span class="chip-label">Calm</span>
+          </div>
+          <div class="chip-card" onclick="toggleChip(this, 'Mood swings')">
+            <div class="chip-icon" style="background:#fee2e2;">🌪️</div>
+            <span class="chip-label">Mood swings</span>
+          </div>
+        </div>
+
+        <div class="category-section-title">Physical Symptoms</div>
+        <div class="chip-grid">
+          <div class="chip-card selected" onclick="toggleChip(this, 'Back pain')">
+            <div class="chip-icon" style="background:#f3e8ff;">🌸</div>
+            <span class="chip-label">Back pain</span>
+          </div>
+          <div class="chip-card selected" onclick="toggleChip(this, 'Fatigue')">
+            <div class="chip-icon" style="background:#fef3c7;">😴</div>
+            <span class="chip-label">Fatigue</span>
+          </div>
+          <div class="chip-card" onclick="toggleChip(this, 'Cramps')">
+            <div class="chip-icon" style="background:#fee2e2;">⚡</div>
+            <span class="chip-label">Cramps</span>
+          </div>
+        </div>
+
+        <div class="form-group" style="margin-top:14px;">
+          <label class="form-label">Personal Observation Note</label>
+          <input class="form-input" id="symptom-note-input" type="text" placeholder="e.g. Mild evening lumbar stiffness" />
+        </div>
+
+        <button class="btn btn-primary btn-full btn-lg" onclick="saveSymptomLog()">💾 Save Daily Record</button>
+      </div>
+    </div>
+  `;
+}
+
+function toggleChip(el, name) {
+  el.classList.toggle('selected');
+}
+
+function saveSymptomLog() {
+  const note = document.getElementById('symptom-note-input')?.value.trim() || 'Daily health review logged.';
+  APP.symptomLogs = APP.symptomLogs || [];
+  APP.symptomLogs.unshift({
+    date: new Date().toISOString().split('T')[0],
+    tags: ['Back pain', 'Fatigue', 'Happy'],
+    notes: note
+  });
+  saveData();
+  closeModal();
+  showToast('Daily health entries recorded! 🌸', 'success');
+  renderCurrentPage();
+}
+
+function openAddAppointmentModal() {
+  const modal = document.getElementById('modal-container');
+  modal.innerHTML = `
+    <div class="modal-overlay" onclick="closeModal(event)">
+      <div class="modal" onclick="event.stopPropagation()">
+        <div class="flex justify-between items-center" style="margin-bottom:14px;">
+          <h2 style="font-size:1.25rem; font-weight:900; color:var(--dark-navy);">🩺 Add Doctor Checkup</h2>
+          <button class="btn btn-ghost btn-sm" onclick="closeModal()">✕</button>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Appointment Title / Purpose *</label>
+          <input class="form-input" id="apt-title" type="text" placeholder="e.g. 28-Week Growth Ultrasound & Blood Count" required />
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Date</label>
+            <input class="form-input" id="apt-date" type="date" value="${new Date().toISOString().split('T')[0]}" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Time</label>
+            <input class="form-input" id="apt-time" type="text" value="10:30 AM" />
+          </div>
+        </div>
+
+        <div class="form-row">
+          <div class="form-group">
+            <label class="form-label">Doctor Name</label>
+            <input class="form-input" id="apt-doc" type="text" value="Dr. Meera Joshi" />
+          </div>
+          <div class="form-group">
+            <label class="form-label">Clinic / Hospital</label>
+            <input class="form-input" id="apt-clinic" type="text" value="Apollo Cradle" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Questions & Focus for Doctor</label>
+          <textarea class="form-textarea" id="apt-notes" rows="2" placeholder="Review hemoglobin, fetal kicks, and safe sleeping postures."></textarea>
+        </div>
+
+        <button class="btn btn-primary btn-full btn-lg" onclick="saveNewAppointment()">💾 Save Appointment</button>
+      </div>
+    </div>
+  `;
+}
+
+function saveNewAppointment() {
+  const title = document.getElementById('apt-title')?.value.trim();
+  if (!title) { showToast('Please enter appointment title', 'error'); return; }
+  APP.appointments = APP.appointments || [];
+  APP.appointments.push({
+    id: uid(),
+    title: title,
+    date: document.getElementById('apt-date')?.value,
+    time: document.getElementById('apt-time')?.value,
+    doctor: document.getElementById('apt-doc')?.value,
+    clinic: document.getElementById('apt-clinic')?.value,
+    type: 'Prenatal Visit',
+    done: false,
+    notes: document.getElementById('apt-notes')?.value
+  });
+  saveData();
+  closeModal();
+  showToast('Doctor appointment scheduled! 🩺', 'success');
+  renderCurrentPage();
+}
+
+function openAddLabModal() {
+  const modal = document.getElementById('modal-container');
+  modal.innerHTML = `
+    <div class="modal-overlay" onclick="closeModal(event)">
+      <div class="modal" onclick="event.stopPropagation()">
+        <div class="flex justify-between items-center" style="margin-bottom:14px;">
+          <h2 style="font-size:1.25rem; font-weight:900; color:var(--dark-navy);">🔬 Log Clinical Lab Record</h2>
+          <button class="btn btn-ghost btn-sm" onclick="closeModal()">✕</button>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Test Type</label>
+          <select class="form-select" id="lab-type">
+            <option value="Ultrasound Scan Report">📷 Ultrasound Scan Report</option>
+            <option value="Glucose Screening (OGTT)">🩸 Glucose Screening (OGTT)</option>
+            <option value="Urine Test (Protein/pH)">🧪 Urine Test (Protein/pH)</option>
+            <option value="Blood Pressure Monitoring">🩺 Blood Pressure Monitoring</option>
+            <option value="Hemoglobin (CBC)">🔬 Hemoglobin Count (CBC)</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Gestation Week & Date</label>
+          <div class="form-row">
+            <input class="form-input" id="lab-week" type="text" value="Week 24" />
+            <input class="form-input" id="lab-date" type="date" value="${new Date().toISOString().split('T')[0]}" />
+          </div>
+        </div>
+
+        <div class="form-group">
+          <label class="form-label">Clinical Findings / Value</label>
+          <input class="form-input" id="lab-result" type="text" placeholder="e.g. 116/74 mmHg, FHR 152 bpm, Normal" />
+        </div>
+
+        <button class="btn btn-primary btn-full btn-lg" onclick="saveNewLabRecord()">💾 Save to Lab Vault</button>
+      </div>
+    </div>
+  `;
+}
+
+function saveNewLabRecord() {
+  const type = document.getElementById('lab-type')?.value;
+  const result = document.getElementById('lab-result')?.value.trim() || 'Normal range';
+  APP.clinicalRecords = APP.clinicalRecords || [];
+  APP.clinicalRecords.unshift({
+    id: uid(),
+    type: type,
+    week: document.getElementById('lab-week')?.value,
+    date: document.getElementById('lab-date')?.value,
+    result: result,
+    status: 'Normal'
+  });
+  saveData();
+  closeModal();
+  showToast('Clinical report saved to your Medical Vault! 🔬', 'success');
+  renderCurrentPage();
+}
+
+function openStageSwitcherModal() {
+  const modal = document.getElementById('modal-container');
+  modal.innerHTML = `
+    <div class="modal-overlay" onclick="closeModal(event)">
+      <div class="modal" onclick="event.stopPropagation()">
+        <div class="flex justify-between items-center" style="margin-bottom:14px;">
+          <h2 style="font-size:1.25rem; font-weight:900; color:var(--dark-navy);">🌸 Select Reproductive Stage</h2>
+          <button class="btn btn-ghost btn-sm" onclick="closeModal()">✕</button>
+        </div>
+
+        <div class="card" style="cursor:pointer; border:${APP.profile.status==='pregnant'?'2px solid var(--purple-500)':'1px solid var(--gray-200)'}" onclick="switchUserStage('pregnant')">
+          <div class="font-bold" style="color:var(--purple-700);">🤰 Pregnant (Expecting Baby)</div>
+          <div class="text-xs text-muted">Weekly fetus milestones, kick counters, doctor appointments.</div>
+        </div>
+
+        <div class="card" style="cursor:pointer; border:${APP.profile.status==='trying'?'2px solid var(--rose-500)':'1px solid var(--gray-200)'}" onclick="switchUserStage('trying')">
+          <div class="font-bold" style="color:var(--rose-600);">🌸 Cycle & Trying to Conceive (TTC)</div>
+          <div class="text-xs text-muted">Flo cycle wheel, ovulation predictions, fertile window countdown.</div>
+        </div>
+
+        <div class="card" style="cursor:pointer; border:${APP.profile.status==='postpartum'?'2px solid var(--teal-500)':'1px solid var(--gray-200)'}" onclick="switchUserStage('postpartum')">
+          <div class="font-bold" style="color:var(--teal-700);">🤱 Postpartum & Newborn Motherhood</div>
+          <div class="text-xs text-muted">Infant feeds, recovery guidance, pediatrician schedule.</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function switchUserStage(st) {
+  APP.profile.status = st;
+  saveData();
+  closeModal();
+  showToast(`Stage switched to ${st}! 🌸`, 'success');
+  renderCurrentPage();
+}
+
+function openAISettingsModal() {
+  const modal = document.getElementById('modal-container');
+  modal.innerHTML = `
+    <div class="modal-overlay" onclick="closeModal(event)">
+      <div class="modal" onclick="event.stopPropagation()">
+        <div class="flex justify-between items-center" style="margin-bottom:14px;">
+          <h2 style="font-size:1.25rem; font-weight:900; color:var(--dark-navy);">✨ AI Key Settings</h2>
+          <button class="btn btn-ghost btn-sm" onclick="closeModal()">✕</button>
+        </div>
+        <p class="text-xs text-muted" style="margin-bottom:14px;">
+          Enter your Gemini API key for live maternal consultations.
+        </p>
+
+        <div class="form-group">
+          <label class="form-label">Google Gemini API Key</label>
+          <input class="form-input" id="cfg-gemini" type="password" value="${APP.settings.geminiApiKey || ''}" placeholder="AIzaSy..." />
+        </div>
+
+        <button class="btn btn-primary btn-full btn-lg" onclick="saveAIKeys()">💾 Save & Connect</button>
+      </div>
+    </div>
+  `;
+}
+
+function saveAIKeys() {
+  APP.settings.geminiApiKey = document.getElementById('cfg-gemini')?.value.trim();
+  saveData();
+  closeModal();
+  showToast('AI Key saved securely! ✨', 'success');
+}
+
+function closeModal(e) {
+  const modal = document.getElementById('modal-container');
+  if (modal) modal.innerHTML = '';
+}
+
+function showArticleModal(topic) {
+  const modal = document.getElementById('modal-container');
+  let title = 'Maternal Health Article';
+  let body = 'Medically reviewed guidance for everyday pregnancy & cycle wellness.';
+  if (topic === 'pms') {
+    title = 'Tips to Relieve PMS Symptoms';
+    body = '1. Magnesium-rich nuts and seeds reduce cramping.<br>2. Hydration flushes water retention.<br>3. Warm compress relaxes smooth uterine muscles.';
+  } else if (topic === 'early_signs') {
+    title = '9 Early Signs of Pregnancy';
+    body = '1. Implantation spotting (light pinkish).<br>2. Mild breast tenderness.<br>3. Heightened sensitivity to smells.<br>4. Basal body temperature staying elevated.';
+  } else if (topic === 'cramps') {
+    title = 'Cramp Relief Roadmap';
+    body = '1. Warm ajwain (carom seed) tea naturally calms uterine cramps.<br>2. Gentle cat-cow stretches relieve lower back pressure.<br>3. Warm water bag placement on lower lumbar area.';
+  }
+  modal.innerHTML = `
+    <div class="modal-overlay" onclick="closeModal(event)">
+      <div class="modal" onclick="event.stopPropagation()">
+        <div class="flex justify-between items-center" style="margin-bottom:14px;">
+          <h2 style="font-size:1.25rem; font-weight:900; color:var(--dark-navy);">${title}</h2>
+          <button class="btn btn-ghost btn-sm" onclick="closeModal()">✕</button>
+        </div>
+        <div style="font-size:0.92rem; line-height:1.65; color:var(--navy-800);">${body}</div>
+        <button class="btn btn-primary btn-full" style="margin-top:22px;" onclick="closeModal()">Got it!</button>
+      </div>
+    </div>
+  `;
+}
+
+function toggleLanguage() {
+  APP.settings.language = APP.settings.language === 'hi' ? 'en' : 'hi';
+  saveData();
+  showToast(APP.settings.language === 'hi' ? 'भाषा हिंदी में बदली गई! 🌸' : 'Language switched to English! 🌸', 'success');
+  renderCurrentPage();
+}
+
+// =========================================================================
+// 13. DATABASE VAULT & MEDICAL BACKUP MODAL
+// =========================================================================
+async function openDatabaseVaultModal() {
+  const modal = document.getElementById('modal-container');
+  if (!modal) return;
+
+  let dbStats = {
+    status: DB_CONNECTED ? 'connected' : 'local_storage',
+    engine: 'MaaSaathi Embedded JSON/SQL Data Vault',
+    storageFile: 'server/data/maasaathi_db.json',
+    counts: {
+      users: 1,
+      appointments: APP.appointments?.length || 0,
+      clinicalRecords: APP.clinicalRecords?.length || 0,
+      symptomLogs: APP.symptomLogs?.length || 0,
+      kickSessions: APP.kickSessions?.length || 0,
+      doctorQuestions: APP.doctorQuestions?.length || 0,
+      checklists: APP.checklists?.length || 0,
+      chatMessages: APP.chatMessages?.length || 0
+    }
+  };
+
+  try {
+    const res = await fetch('/api/db/status');
+    if (res.ok) {
+      dbStats = await res.json();
+      DB_CONNECTED = true;
+      updateDbStatusDot(true);
+    }
+  } catch (e) {
+    // Offline mode
+  }
+
+  const isLive = dbStats.status === 'connected';
+
+  modal.innerHTML = `
+    <div class="modal-overlay" onclick="closeModal(event)">
+      <div class="modal" style="max-width:540px;" onclick="event.stopPropagation()">
+        <div class="flex justify-between items-center" style="margin-bottom:12px;">
+          <div class="flex items-center gap-10">
+            <div style="width:40px; height:40px; border-radius:12px; background:var(--purple-100); display:flex; align-items:center; justify-content:center; font-size:1.4rem;">🗄️</div>
+            <div>
+              <h2 style="font-size:1.25rem; font-weight:900; color:var(--dark-navy);">Patient Database Vault</h2>
+              <div class="text-xs text-muted">Persistent health records storage & synchronization</div>
+            </div>
+          </div>
+          <button class="btn btn-ghost btn-sm" onclick="closeModal()">✕</button>
+        </div>
+
+        <!-- Connection Status Card -->
+        <div class="card" style="background:${isLive ? '#f0fdf4' : '#fffbeb'}; border:1px solid ${isLive ? '#bbf7d0' : '#fde68a'}; margin-bottom:14px; padding:14px;">
+          <div class="flex justify-between items-center">
+            <div class="flex items-center gap-10">
+              <span style="font-size:1.2rem;">${isLive ? '🟢' : '🟡'}</span>
+              <div>
+                <div class="font-bold text-sm" style="color:${isLive ? '#15803d' : '#b45309'};">
+                  ${isLive ? 'Live Database Connected' : 'Offline Local Storage Mode'}
+                </div>
+                <div class="text-xs text-muted">
+                  ${isLive ? 'Engine: ' + (dbStats.engine || 'MaaSaathi DB') : 'Syncs automatically when server is online'}
+                </div>
+              </div>
+            </div>
+            <button class="btn btn-sm ${isLive ? 'btn-primary' : 'btn-outline'}" onclick="manualSyncDatabase()">
+              🔄 Sync Now
+            </button>
+          </div>
+        </div>
+
+        <!-- Live Database Records Metrics Grid -->
+        <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:10px; margin-bottom:16px;">
+          <div class="card" style="padding:12px; text-align:center; background:#faf5ff;">
+            <div class="text-xs text-muted">📅 Appointments</div>
+            <div style="font-size:1.35rem; font-weight:900; color:var(--purple-700);">${dbStats.counts?.appointments || 0}</div>
+          </div>
+          <div class="card" style="padding:12px; text-align:center; background:#f0fdfa;">
+            <div class="text-xs text-muted">🔬 Clinical Lab Reports</div>
+            <div style="font-size:1.35rem; font-weight:900; color:var(--teal-700);">${dbStats.counts?.clinicalRecords || 0}</div>
+          </div>
+          <div class="card" style="padding:12px; text-align:center; background:#fff0f5;">
+            <div class="text-xs text-muted">📝 Symptoms Logged</div>
+            <div style="font-size:1.35rem; font-weight:900; color:var(--rose-600);">${dbStats.counts?.symptomLogs || 0}</div>
+          </div>
+          <div class="card" style="padding:12px; text-align:center; background:#f0f9ff;">
+            <div class="text-xs text-muted">👣 Kick Sessions</div>
+            <div style="font-size:1.35rem; font-weight:900; color:var(--blue-700);">${dbStats.counts?.kickSessions || 0}</div>
+          </div>
+        </div>
+
+        <!-- Patient Vault Actions -->
+        <div style="display:flex; flex-direction:column; gap:10px;">
+          <button class="btn btn-primary btn-full" onclick="downloadDatabaseBackup()">
+            💾 Download Full JSON Database Backup
+          </button>
+          <div class="flex gap-10">
+            <button class="btn btn-secondary" style="flex:1;" onclick="exportMedicalReportPDF()">
+              📋 Export Doctor Summary Slip (.txt)
+            </button>
+            <label class="btn btn-outline" style="flex:1; cursor:pointer; text-align:center; display:flex; align-items:center; justify-content:center;">
+              📥 Restore Backup
+              <input type="file" accept=".json" style="display:none;" onchange="restoreDatabaseFromFile(event)" />
+            </label>
+          </div>
+        </div>
+
+        <div style="margin-top:14px; text-align:center; font-size:0.75rem; color:var(--gray-500);">
+          🔒 Patient privacy preserved. Health records stored locally & encrypted on your device.
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+async function manualSyncDatabase() {
+  showToast('Connecting to database server... 🔄');
+  const ok = await fetchDataFromDatabase(false);
+  if (!ok) {
+    saveData(true);
+    showToast('Cached locally! Will sync when backend is reached.', 'info');
+  }
+  openDatabaseVaultModal();
+}
+
+function downloadDatabaseBackup() {
+  const backup = {
+    app: 'MaaSaathi',
+    exported_at: new Date().toISOString(),
+    user_id: 'user_default',
+    version: '1.0.0',
+    data: APP
+  };
+  const blob = new Blob([JSON.stringify(backup, null, 2)], { type: 'application/json' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = `MaaSaathi_Patient_Vault_${(APP.profile?.name || 'User').replace(/\s+/g, '_')}_${Date.now()}.json`;
+  a.click();
+  showToast('Patient database vault exported successfully! 💾', 'success');
+}
+
+function restoreDatabaseFromFile(event) {
+  const file = event.target?.files?.[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = async (e) => {
+    try {
+      const parsed = JSON.parse(e.target.result);
+      const dataToRestore = parsed.data || parsed;
+      if (dataToRestore && dataToRestore.profile) {
+        APP = { ...getDefaultData(), ...dataToRestore };
+        saveData(true);
+        closeModal();
+        showToast('Database vault restored successfully! ✨', 'success');
+        renderCurrentPage();
+      } else {
+        showToast('Invalid backup file structure.', 'error');
+      }
+    } catch (err) {
+      showToast('Failed to parse backup JSON file.', 'error');
+    }
+  };
+  reader.readAsText(file);
+}
+
+// =========================================================================
+// 14. BOOTSTRAP INITIALIZATION
+// =========================================================================
+window.addEventListener('DOMContentLoaded', async () => {
+  renderCurrentPage();
+  // Asynchronously connect to server database
+  await fetchDataFromDatabase(true);
+  renderCurrentPage();
+});
+</script>
+</body>
+</html>

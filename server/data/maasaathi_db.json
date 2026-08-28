@@ -1,0 +1,180 @@
+{
+  "version": "1.0.0",
+  "created_at": "2026-08-28T11:00:00.000Z",
+  "updated_at": "2026-08-28T11:00:00.000Z",
+  "users": {
+    "user_default": {
+      "id": "user_default",
+      "profile": {
+        "name": "Olivia Sharma",
+        "status": "pregnant",
+        "edd": "2026-12-18",
+        "cycleLength": 28,
+        "periodLength": 5,
+        "lastPeriodDate": "2026-08-14",
+        "bloodGroup": "B Positive (B+)",
+        "doctorName": "Dr. Meera Joshi, MD (OB/GYN)",
+        "hospitalName": "Apollo Cradle Maternity Hospital",
+        "ec_name": "Rajesh Sharma (Spouse)",
+        "ec_phone": "+91 98765 43210",
+        "city": "Mumbai"
+      },
+      "appointments": [
+        {
+          "id": "apt-1",
+          "title": "Routine 24-Week Anomaly Scan & Glucose Check",
+          "date": "2026-09-02",
+          "time": "10:30 AM",
+          "doctor": "Dr. Meera Joshi",
+          "clinic": "Apollo Cradle - Clinic #204",
+          "type": "Prenatal Checkup",
+          "done": false,
+          "notes": "Review fetal anatomy scan, hemoglobin count, and discuss safe iron supplements."
+        },
+        {
+          "id": "apt-0",
+          "title": "First Trimester NT Scan & Dual Marker",
+          "date": "2026-06-14",
+          "time": "11:00 AM",
+          "doctor": "Dr. Meera Joshi",
+          "clinic": "Apollo Cradle Maternity",
+          "type": "Ultrasound Scan",
+          "done": true,
+          "notes": "Fetal nasal bone visualized. NT 1.2mm (Normal). Low risk on dual marker screening.",
+          "prescription": "Folvite 5mg OD, Susten 200mg at bedtime"
+        }
+      ],
+      "clinicalRecords": [
+        {
+          "id": "cr-1",
+          "type": "Ultrasound Report",
+          "date": "2026-06-15",
+          "week": "12th Week",
+          "result": "Single active fetus, CRL 58mm, FHR 156 bpm",
+          "status": "Normal"
+        },
+        {
+          "id": "cr-2",
+          "type": "Glucose Screening (OGTT)",
+          "date": "2026-07-10",
+          "week": "20th Week",
+          "result": "Fasting: 82 mg/dL, 2-Hr: 118 mg/dL",
+          "status": "Normal"
+        },
+        {
+          "id": "cr-3",
+          "type": "Urine Test (Protein/pH)",
+          "date": "2026-08-22",
+          "week": "23rd Week",
+          "result": "pH 5.2, Protein: Nil, Sugar: Nil",
+          "status": "Normal"
+        },
+        {
+          "id": "cr-4",
+          "type": "Blood Pressure Monitoring",
+          "date": "2026-08-25",
+          "week": "24th Week",
+          "result": "116 / 74 mmHg",
+          "status": "Normal"
+        }
+      ],
+      "symptomLogs": [
+        {
+          "date": "2026-08-28",
+          "tags": ["Back pain", "Fatigue", "Happy"],
+          "notes": "Mild evening lower back ache after desk work."
+        }
+      ],
+      "kickSessions": [
+        {
+          "date": "2026-08-28",
+          "kicks": 10,
+          "durationMinutes": 18
+        }
+      ],
+      "waterGlasses": 6,
+      "waterDate": "2026-08-28",
+      "doctorQuestions": [
+        {
+          "id": "dq-1",
+          "question": "Is my baby weight gaining according to 50th percentile?",
+          "asked": false
+        },
+        {
+          "id": "dq-2",
+          "question": "Can I continue gentle prenatal yoga in trimester 2?",
+          "asked": true
+        }
+      ],
+      "forumPosts": [
+        {
+          "id": "fp-1",
+          "club": "Due in October 2025 Club",
+          "author": "Pooja K.",
+          "title": "Best belly moisturizers for itching?",
+          "replies": 14,
+          "likes": 28
+        },
+        {
+          "id": "fp-2",
+          "club": "First-Time Mamas Haven",
+          "author": "Anita S.",
+          "title": "How early did you feel distinct kicks?",
+          "replies": 32,
+          "likes": 51
+        }
+      ],
+      "checklists": [
+        {
+          "id": "hb1",
+          "cat": "hospital",
+          "label": "Aadhaar / ID Card & Maternity Insurance papers",
+          "done": true
+        },
+        {
+          "id": "hb2",
+          "cat": "hospital",
+          "label": "Previous Ultrasounds & Doctor prescription file",
+          "done": true
+        },
+        {
+          "id": "hb3",
+          "cat": "hospital",
+          "label": "2-3 Front-open soft cotton nursing nightgowns",
+          "done": false
+        },
+        {
+          "id": "hb4",
+          "cat": "hospital",
+          "label": "High absorbency maternity pads & disposable panties",
+          "done": false
+        },
+        {
+          "id": "be1",
+          "cat": "baby",
+          "label": "4-5 Washed pure cotton jhablas / onesies",
+          "done": false
+        },
+        {
+          "id": "be2",
+          "cat": "baby",
+          "label": "Soft mulmul swaddle wraps & newborn cap",
+          "done": true
+        },
+        {
+          "id": "be3",
+          "cat": "baby",
+          "label": "Alcohol-free water wipes & gentle diaper rash cream",
+          "done": false
+        }
+      ],
+      "chatMessages": [],
+      "settings": {
+        "language": "en",
+        "geminiApiKey": "",
+        "groqApiKey": "",
+        "timelineView": "weeks"
+      }
+    }
+  }
+}
