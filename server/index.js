@@ -19,7 +19,8 @@ const db = require('./database');
 
 const app = express();
 const PORT = process.env.PORT || 3000;
-const AI_PROVIDER = (process.env.AI_PROVIDER || 'gemini').toLowerCase();
+let rawProvider = (process.env.AI_PROVIDER || 'gemini').toLowerCase().trim();
+const AI_PROVIDER = rawProvider.includes('groq') ? 'groq' : 'gemini';
 
 app.use(cors());
 app.use(express.json({ limit: '2mb' }));
@@ -389,21 +390,31 @@ async function callGemini(prompt) {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) throw new Error('GEMINI_API_KEY not configured');
 
-  const model = process.env.GEMINI_MODEL || 'gemini-1.5-flash';
-  const url = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-
-  const body = {
-    system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
-    contents: [{ role: 'user', parts: [{ text: prompt }] }],
-    generationConfig: { maxOutputTokens: 512, temperature: 0.4 }
-  };
+  let model = process.env.GEMINI_MODEL || 'gemini-3.5-flash-lite';
+  if (model === 'gemini-1.5-flash' || model === 'gemini-2.5-flash') {
+    model = 'gemini-3.5-flash-lite';
+  }
 
   const fetchFn = typeof fetch !== 'undefined' ? fetch : (await import('node-fetch')).default;
-  const res = await fetchFn(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify(body)
-  });
+  const executeCall = async (modelName) => {
+    const url = `https://generativelanguage.googleapis.com/v1beta/models/${modelName}:generateContent?key=${apiKey}`;
+    const body = {
+      system_instruction: { parts: [{ text: SYSTEM_PROMPT }] },
+      contents: [{ role: 'user', parts: [{ text: prompt }] }],
+      generationConfig: { maxOutputTokens: 512, temperature: 0.4 }
+    };
+    return fetchFn(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(body)
+    });
+  };
+
+  let res = await executeCall(model);
+  if (!res.ok && res.status === 404 && model !== 'gemini-3.5-flash-lite') {
+    console.warn(`Model ${model} unavailable, falling back to gemini-3.5-flash-lite`);
+    res = await executeCall('gemini-3.5-flash-lite');
+  }
 
   if (!res.ok) {
     const errText = await res.text();
@@ -418,28 +429,37 @@ async function callGemini(prompt) {
 // Groq API Call (Server-side)
 // =============================================
 async function callGroq(prompt) {
-  const apiKey = process.env.GROQ_API_KEY;
+  const rawKey = process.env.GROQ_API_KEY || '';
+  // Handle case where user may have accidentally concatenated multiple keys
+  const apiKey = rawKey.startsWith('gsk_') ? ('gsk_' + rawKey.slice(4).split('gsk_')[0]) : rawKey;
   if (!apiKey) throw new Error('GROQ_API_KEY not configured');
 
-  const model = process.env.GROQ_MODEL || 'llama-3.1-8b-instant';
-  const url = 'https://api.groq.com/openai/v1/chat/completions';
-
-  const body = {
-    model,
-    messages: [
-      { role: 'system', content: SYSTEM_PROMPT },
-      { role: 'user', content: prompt }
-    ],
-    max_tokens: 512,
-    temperature: 0.4
-  };
+  let model = process.env.GROQ_MODEL || 'openai/gpt-oss-20b';
 
   const fetchFn = typeof fetch !== 'undefined' ? fetch : (await import('node-fetch')).default;
-  const res = await fetchFn(url, {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
-    body: JSON.stringify(body)
-  });
+  const executeCall = async (modelName) => {
+    const url = 'https://api.groq.com/openai/v1/chat/completions';
+    const body = {
+      model: modelName,
+      messages: [
+        { role: 'system', content: SYSTEM_PROMPT },
+        { role: 'user', content: prompt }
+      ],
+      max_tokens: 512,
+      temperature: 0.4
+    };
+    return fetchFn(url, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
+      body: JSON.stringify(body)
+    });
+  };
+
+  let res = await executeCall(model);
+  if (!res.ok && res.status === 404 && model !== 'openai/gpt-oss-20b') {
+    console.warn(`Groq model ${model} not found, falling back to openai/gpt-oss-20b`);
+    res = await executeCall('openai/gpt-oss-20b');
+  }
 
   if (!res.ok) {
     const errText = await res.text();
@@ -449,6 +469,7 @@ async function callGroq(prompt) {
   const data = await res.json();
   return data?.choices?.[0]?.message?.content || 'I was unable to generate a response. Please try again.';
 }
+
 
 // =============================================
 // Catch-all: Serve index.html
