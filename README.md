@@ -1,329 +1,206 @@
-# MaaSaathi — Multilingual Maternity Companion
+# MaaSaathi — Multilingual Maternity & Newborn Care Companion
 
 > **"A simple multilingual companion for safer pregnancy and newborn care."**
 
-MaaSaathi is a health-awareness and healthcare-access web application for pregnant women and new mothers. It helps users track pregnancy, log symptoms, manage appointments, access awareness content, and ask an AI assistant questions in their preferred language.
+MaaSaathi is a maternal and newborn health-awareness companion web application for pregnant women, new mothers, and caregivers. It helps users track pregnancy weeks, log symptoms, manage checkup appointments, access health-awareness guidance, generate caregiver summaries, and ask an AI assistant awareness questions in English or Hindi.
 
 ---
 
-## ⚠️ Important Disclaimer
+## 🏛️ Local Architecture for Hackathon
 
-**MaaSaathi is a hackathon prototype for educational and demonstration purposes only.**
+```text
+Browser frontend (localhost:3000)
+    ↓
+Node.js + Express backend (localhost:3000)
+    ↓
+MySQL Server (localhost:3306 - maasaathi_db)
+    ↓
+Optional Gemini or Groq API (server-side keys only)
+```
 
-- It does **not** diagnose medical conditions.
-- It does **not** replace a qualified healthcare professional.
-- It does **not** prescribe medicines or provide treatment plans.
-- It uses **localStorage** for data storage — not suitable for sensitive production healthcare data.
-- Demo hospital data is **fictional** — do not use for real emergencies.
-
-**In an emergency, always contact local emergency services (112 in India) or go to the nearest hospital.**
-
----
-
-## 🚀 Features
-
-| Feature | Status |
-|---|---|
-| **Caregiver Relay / One-Page Care Summary (Innovation B)** | ✅ |
-| **Download (`maasaathi-care-summary.txt`) & Print Summary** | ✅ |
-| Pregnancy week & trimester calculator | ✅ |
-| Home dashboard with daily guidance | ✅ |
-| Symptom log with warning-word detection | ✅ |
-| Appointment & reminder calendar | ✅ |
-| Kick counter (session-based) | ✅ |
-| Contraction timer | ✅ |
-| Hospital bag & to-do checklists | ✅ |
-| Baby feeding & growth tracker | ✅ |
-| Pregnancy health awareness cards | ✅ |
-| Vaccination awareness cards | ✅ |
-| Maternal nutrition guidance | ✅ |
-| Newborn care awareness | ✅ |
-| Emergency contacts & demo hospital resources | ✅ |
-| AI chatbot (demo + live Gemini/Groq) | ✅ |
-| English ↔ Hindi language toggle | ✅ |
-| localStorage persistence (survives refresh) | ✅ |
-| Export all data as JSON | ✅ |
-| Mobile-first responsive design | ✅ |
+- **Database Engine**: Local MySQL Server (port 3306).
+- **Database Management Tool**: MySQL Workbench (used to create and inspect `maasaathi_db`).
+- **Resilience**: The browser maintains a local demo copy in `localStorage` for continuity. If MySQL is temporarily offline, the application gracefully operates in **Local Demo Mode** without data loss.
 
 ---
 
-## 📦 Installation & Running
+## ⚠️ Important Medical & Safety Disclaimer
 
-### Standard Node.js Execution:
+**MaaSaathi is a prototype for awareness and demonstration purposes only.**
 
+- It does **not** diagnose medical conditions or interpret clinical test reports.
+- It does **not** replace a qualified obstetrician, pediatrician, or healthcare professional.
+- It does **not** prescribe medicines or calculate drug dosages.
+- It provides general health-awareness information and structured summaries for discussions with doctors.
+
+**In case of warning signs (heavy bleeding, sudden severe pain, high fever, or reduced fetal movement), contact emergency services (112 in India) or visit the nearest hospital immediately.**
+
+---
+
+## 💻 Local Setup Guide (MySQL & Express)
+
+Follow this exact local setup flow to run MaaSaathi:
+
+### 1. Install MySQL Server and MySQL Workbench
+Download and install MySQL Community Server and MySQL Workbench from the official MySQL website:
+- [MySQL Community Downloads](https://dev.mysql.com/downloads/)
+
+### 2. Start the MySQL Server
+Ensure the MySQL Server service is running locally on port `3306`.
+- **Windows**: Open `services.msc` and ensure **MySQL80** (or similar) is Running, or start via Command Prompt / PowerShell:
+  ```powershell
+  net start MySQL80
+  ```
+
+### 3. Open MySQL Workbench
+Launch **MySQL Workbench** and open your local MySQL connection (typically `localhost:3306` with user `root`).
+
+### 4. Run `server/mysql-schema.sql`
+In MySQL Workbench:
+1. Go to **File** → **Open SQL Script...**
+2. Select `server/mysql-schema.sql` from this repository.
+3. Click the ⚡ **Execute** (lightning bolt) icon to run the script.
+4. This creates the `maasaathi_db` database, InnoDB tables with utf8mb4 encoding, and seeds the default demo user (`user_id = 1`).
+5. Refresh the **Schemas** panel in Workbench to inspect `maasaathi_db` and its tables.
+
+### 5. Copy `.env.example` to `.env`
+In your project root:
+```bash
+cp .env.example .env
+```
+*(On Windows Command Prompt: `copy .env.example .env`)*
+
+### 6. Add the Local MySQL Password
+Edit `.env` and set your local MySQL password:
+```env
+PORT=3000
+
+DB_HOST=127.0.0.1
+DB_PORT=3306
+DB_NAME=maasaathi_db
+DB_USER=root
+DB_PASSWORD=YOUR_LOCAL_MYSQL_PASSWORD
+```
+
+### 7. Add the Gemini or Groq API Key (Optional)
+If you have an API key, add it to `.env`:
+```env
+AI_PROVIDER=gemini
+GEMINI_API_KEY=your_gemini_api_key_here
+GEMINI_MODEL=gemini-1.5-flash
+
+# Or for Groq:
+# AI_PROVIDER=groq
+# GROQ_API_KEY=your_groq_api_key_here
+# GROQ_MODEL=llama-3.1-8b-instant
+```
+*Note: If no API key is provided, MaaSaathi automatically provides safe demo responses clearly marked as `[Demo response: AI key not configured on server]`.*
+
+### 8. Install Dependencies and Start the Server
 ```bash
 npm install
 npm start
 ```
+The console will report:
+- `MaaSaathi MySQL database connected` (when credentials are valid)
+- `🌸 MaaSaathi server running on http://localhost:3000`
 
-Open `http://localhost:3000` in your web browser.
-
-### Option B: Open directly in browser (Offline Demo)
-
-```
-Double-click index.html
-OR
-Open with any web browser (Chrome, Firefox, Edge)
-```
-
-No build tools or backend dependencies are strictly required because localStorage maintains complete prototype state offline.
-
-### Backend Configuration (Optional):
-
-The server reads environment variables from `.env`:
-```
-AI_PROVIDER=gemini
-GEMINI_API_KEY=your-key-here
-GEMINI_MODEL=gemini-1.5-flash
-PORT=3000
+### 9. Open in Browser
+Open your browser and navigate to:
+```text
+http://localhost:3000
 ```
 
-Then `/api/chat` becomes available. Without the server, the app uses demo responses automatically.
+---
+
+## 🔧 Troubleshooting
+
+### 1. MySQL Access Denied (`ER_ACCESS_DENIED_ERROR`)
+- **Cause**: Incorrect MySQL username or password in `.env`.
+- **Fix**: Open `.env` and check `DB_USER` and `DB_PASSWORD`. Test logging into MySQL Workbench with those exact credentials. Remember to restart the Node server after modifying `.env`.
+
+### 2. MySQL Server Not Running (`ECONNREFUSED` / `ETIMEDOUT`)
+- **Cause**: MySQL Windows service has not been started.
+- **Fix**: Open Windows Services (`services.msc`), find **MySQL80** (or your version name), and click **Start**. Alternatively run `net start MySQL80` in an administrative shell.
+
+### 3. Port 3306 Already in Use
+- **Cause**: Another service (such as MariaDB, XAMPP, or another MySQL instance) is bound to port 3306.
+- **Fix**: Stop the conflicting service, or configure MySQL to run on a different port (e.g., 3307) and update `DB_PORT=3307` in your `.env` file.
+
+### 4. Gemini API Key Missing
+- **Behavior**: MaaSaathi does **not** crash. It gracefully returns safe maternal health awareness demo responses with the notice: `[Demo response: AI key not configured on server]`.
+- **Fix**: Obtain a free API key from [Google AI Studio](https://aistudio.google.com/), add `GEMINI_API_KEY=your_key` to `.env`, and restart the server.
+
+### 5. AI Provider Unavailable (`503` / Network Timeout)
+- **Behavior**: If the external AI service experiences rate-limiting or downtime, MaaSaathi returns a fallback awareness response and reminds the mother to speak with a healthcare professional.
+- **Fix**: Check your internet connection or switch `AI_PROVIDER=groq` in `.env`.
 
 ---
 
-## 🤖 How to Configure Gemini AI
+## 🗄️ MySQL Database Schema (`maasaathi_db`)
 
-1. Get an API key from [Google AI Studio](https://aistudio.google.com/app/apikey)
-2. Copy `.env.example` to `.env`
-3. Set `GEMINI_API_KEY=your-key`
-4. Run the Node.js server: `node server/index.js`
-5. Open the app — it will use live Gemini responses
+The database uses InnoDB engine and utf8mb4 encoding across 9 tables:
 
-### How to Configure Groq instead
-
-1. Get an API key from [Groq Console](https://console.groq.com)
-2. Set in `.env`:
-   ```
-   AI_PROVIDER=groq
-   GROQ_API_KEY=your-key
-   GROQ_MODEL=llama-3.1-8b-instant
-   ```
-
-**Without any API key configured**, the app uses safe, pre-written demo responses — the app remains fully usable.
+| Table | Description | Primary Key |
+|---|---|---|
+| `users` | Mother profile (name, edd, status, doctor, hospital, emergency contact, language) | `id` (INT) |
+| `appointments` | Prenatal checkups, anomaly scans, dates, times, clinics, notes, done flag | `id` (VARCHAR) |
+| `symptom_logs` | Daily logged symptoms, JSON tags array, and user notes | `id` (VARCHAR) |
+| `doctor_questions` | Questions saved for upcoming consultations with asked flag | `id` (VARCHAR) |
+| `checklists` | Hospital bag, baby, and postpartum packing items | `id` (VARCHAR) |
+| `kick_sessions` | Fetal movement tracking sessions (kicks count, duration in minutes) | `id` (VARCHAR) |
+| `chat_messages` | Consultation conversation history with AI role and message text | `id` (INT) |
+| `app_settings` | User hydration target, glasses drank, water date, language setting | `id` (INT) |
+| `clinical_records` | Saved health records, lab reports, ultrasound vitals, and blood pressure | `id` (VARCHAR) |
 
 ---
 
-## 💾 How localStorage Persistence Works
-
-All user data is saved in the browser's `localStorage` under the key `maasaathi_data_v1`. The data structure is a single JSON object containing:
-
-```json
-{
-  "profile": { "name": "...", "edd": "...", "language": "en" },
-  "symptoms": [...],
-  "appointments": [...],
-  "kickSessions": [...],
-  "contractionSessions": [...],
-  "checklists": {...},
-  "babyData": { "profiles": [], "feedings": [], "weights": [] },
-  "chatMessages": [...],
-  "reminders": [...],
-  "settings": { "language": "en" }
-}
-```
-
-Data is saved after every create/edit/delete action. It persists across browser refreshes and browser restarts on the same device.
-
-**Limitation**: localStorage is device-specific and not suitable for sensitive healthcare data in production. A real deployment would require a secure server-side database with proper authentication and encryption.
-
----
-
-## 🧠 How the AI Receives User Context
-
-Before each AI request, `buildUserContext()` assembles a minimal context object:
-
-```json
-{
-  "language": "en",
-  "name": "Anita",
-  "pregnancyStatus": "pregnant",
-  "estimatedDueDate": "2026-12-01",
-  "currentWeek": 24,
-  "upcomingAppointment": {
-    "title": "Antenatal Checkup",
-    "date": "2026-09-03"
-  },
-  "recentSymptoms": [...]
-}
-```
-
-This context is sent with every question to `/api/chat`. The AI's system prompt instructs it to personalize responses based only on what is present in this context — it never invents data.
-
----
-
-## 🛡️ Emergency Safety Rules
-
-The app implements a **deterministic safety layer** that runs before and independently of the AI:
-
-**Warning words checked** include: `severe bleeding`, `chest pain`, `difficulty breathing`, `fainting`, `seizure`, `severe headache`, `reduced fetal movement`, `severe abdominal pain`, `high fever`, and Hindi equivalents.
-
-When a warning word is detected:
-1. A bright red **Emergency Card** is shown immediately above or alongside the AI response
-2. The card says: *"This may need urgent professional attention. MaaSaathi cannot diagnose symptoms."*
-3. Buttons for Emergency Call (112), Emergency Contact, and Hospital Resources are shown prominently
-4. The AI may still provide a general awareness response, but the emergency action is always visible
-
-The AI's system prompt also instructs it to never diagnose symptoms and to always refer to emergency services if warning signs are described.
-
----
-
-## 🌐 How to Add Another Language
-
-1. Add a new key to the `T` object in `index.html`:
-   ```javascript
-   const T = {
-     en: { ... },
-     hi: { ... },
-     mr: {          // ← new Marathi translations
-       nav_home: 'मुख्यपृष्ठ',
-       emergency_btn: 'आता मदत मिळवा',
-       // ... all keys
-     }
-   };
-   ```
-2. Add the language option to the profile form select.
-3. Add awareness content to `KNOWLEDGE` for the new language key.
-4. Add daily tips to `DAILY_TIPS` for the new language key.
-5. Update the `toggleLanguage()` function to cycle through all languages.
-
----
-
-## 🏥 How to Replace Demo Hospital Data with Verified Data
-
-The demo resources are defined in `DEMO_RESOURCES` array in `index.html`:
-
-```javascript
-const DEMO_RESOURCES = [
-  {
-    icon: '🏥',
-    name: 'Real Hospital Name',
-    city: 'City, State',
-    address: 'Full verified address',
-    phone: 'Verified phone number',
-    hours: 'Verified hours',
-    directions: 'https://maps.google.com/?q=latitude,longitude'
-  },
-  // ... more hospitals
-];
-```
-
-**Before replacing demo data**:
-- Verify all phone numbers are current and correct
-- Verify hospital addresses using official sources
-- Verify opening hours
-- Confirm emergency services availability
-- Add the "Demo resource data" notice label to production data if unverified
-- Consider using a backend database with admin-managed resource records for real deployment
-
----
-
-## 🗑️ How Users Delete Their Data
-
-### From the app:
-1. Go to **Profile** → **Settings** (or navigate to Settings)
-2. Tap **"Clear All Data"**
-3. Confirm the deletion prompt
-4. All data is removed from localStorage immediately
-
-### Manually:
-1. Open browser DevTools (F12)
-2. Go to Application → Local Storage
-3. Delete the `maasaathi_data_v1` key
-
-### Export before deleting:
-Users can tap **"Export Data"** in Settings to download a JSON file of all their data before clearing.
-
----
-
-## 🗄️ Patient Health Database Architecture
-
-MaaSaathi includes an embedded, persistent Database Engine designed for zero-friction local deployments while offering enterprise-grade ACID integrity:
-
-- **Storage Location**: `server/data/maasaathi_db.json`
-- **Database Engine**: `server/database.js`
-- **Dual-Layer Architecture**:
-  1. **In-Memory & Server Database**: Atomic disk writes with backup recovery.
-  2. **Browser LocalStorage Cache**: Instant zero-latency rendering with background synchronization.
-  3. **Offline Resilience**: Automatically operates offline and syncs pending records whenever server connection is re-established.
-
-### 📋 Database Collections & Records Stored:
-- **User Profiles**: Gestation week, EDD, cycle metrics, blood group, attending OB/GYN, hospital, emergency contacts.
-- **Doctor Appointments**: Checkup dates, times, ultrasound findings, prescriptions, and notes.
-- **Clinical Lab Vault**: Ultrasound reports, OGTT glucose screenings, urine tests, hemoglobin, blood pressure readings.
-- **Symptom History**: Daily symptom tags, severity notes, and logged timestamps.
-- **Fetal Kick Sessions**: Session durations, kick counts, and timestamps.
-- **Doctor Questions**: Questions marked as asked/unasked for upcoming visits.
-- **Hospital Bag Checklists**: Packed / pending maternity & newborn items.
-- **Consultation History**: AI chat logs and doctor guidance recommendations.
-
----
-
-## 🔌 Database REST API Endpoints
+## 🔌 API Endpoints
 
 | Method | Endpoint | Description |
 |---|---|---|
-| `GET` | `/api/db/status` | Database health check, record counts, and storage stats |
-| `GET` | `/api/records/all` | Fetch complete user data bundle from database |
-| `POST` | `/api/records/sync` | Batch synchronization between frontend and database |
-| `POST` | `/api/user/profile` | Update active user profile |
-| `GET` / `POST` | `/api/appointments` | List or create doctor appointments |
-| `PUT` / `DELETE` | `/api/appointments/:id` | Update or delete appointment by ID |
-| `GET` / `POST` | `/api/clinical-records` | List or store clinical lab reports |
-| `DELETE` | `/api/clinical-records/:id` | Delete clinical lab report |
+| `GET` | `/api/health` | Service health check (`{ ok: true, service: "MaaSaathi backend", database: "mysql" }`) |
+| `GET` | `/api/db/status` | Honest MySQL connection status, database name, and record metrics |
+| `GET` | `/api/records/all` | Fetch complete bundle for user (`userId=user_default` maps to `1`) |
+| `POST` | `/api/records/sync` | Synchronize frontend state to MySQL using parameterized SQL queries |
+| `POST` | `/api/user/profile` | Update mother profile fields in MySQL |
+| `GET` / `POST` | `/api/appointments` | List or insert doctor appointments |
+| `PUT` / `DELETE` | `/api/appointments/:id` | Update status/notes or delete appointment |
+| `GET` / `POST` | `/api/clinical-records` | List or insert clinical lab records |
+| `DELETE` | `/api/clinical-records/:id` | Delete clinical lab record |
 | `POST` | `/api/symptoms` | Log daily symptoms and health tags |
-| `POST` | `/api/kicks` | Save baby kick counter session |
+| `POST` | `/api/kicks` | Save kick counter session |
+| `POST` | `/api/chat` | AI consultation via server-side Gemini/Groq (or safe demo response) |
+| `GET` | `/api/care-summary` | Retrieve structured One-Page Care Summary from MySQL for testing |
 | `GET` | `/api/export` | Download full JSON database backup |
-| `POST` | `/api/import` | Restore database from JSON backup file |
+| `POST` | `/api/import` | Restore database records from backup file |
 
 ---
 
-## 📁 File Structure
+## 📋 Caregiver Relay / One-Page Care Summary
 
-```
+The Caregiver Relay feature converts saved pregnancy information into a printable one-page summary for a doctor or trusted family member.
+
+- **Offline-First**: Generates directly in the browser from `localStorage` even if MySQL is temporarily unavailable.
+- **Includes**: Mother name or Demo User, pregnancy status, current week, EDD, city, doctor, delivery hospital, emergency contact, recent symptoms, upcoming appointments, doctor questions, selected language, timestamp, and safety disclaimers.
+- **Actions**:
+  - **Create Care Summary**: View styled sheet modal.
+  - **Download Summary**: Downloads plain text file `maasaathi-care-summary.txt`.
+  - **Print Summary**: Opens native browser print dialog for paper or PDF export.
+
+---
+
+## 📁 Repository Structure
+
+```text
 IBM_SipnaHackX/
-├── index.html          ← Complete frontend application with DB Vault UI
+├── index.html              ← Multilingual frontend (English & Hindi)
+├── package.json            ← Dependencies (express, mysql2, cors, dotenv, node-fetch)
+├── .env.example            ← Safe environment variables template
+├── .gitignore              ← Excludes node_modules/ and .env
 ├── server/
-│   ├── index.js        ← Express server, AI chat & REST API endpoints
-│   ├── database.js     ← Persistent ACID database engine & schema manager
-│   └── data/           ← Persistent database directory
-│       └── maasaathi_db.json ← Patient records database file
-├── .env.example        ← Environment variable template
-└── README.md           ← Complete documentation
+│   ├── index.js            ← Express server, API routes & server-side AI integration
+│   ├── database.js         ← Promise-based MySQL connection pool & persistence layer
+│   └── mysql-schema.sql    ← MySQL schema creation and demo seed script for Workbench
+└── README.md               ← Local setup, architecture, and troubleshooting documentation
 ```
-
----
-
-## 🔒 Privacy & Security Notes
-
-- No data is sent to any server unless a live AI API key is configured
-- In demo mode, all data stays in the browser
-- No analytics, no tracking, no external requests (except Google Fonts and the optional AI API)
-- API keys are never stored in localStorage or exposed to the browser
-- The backend server uses environment variables only
-
----
-
-## 🎯 Hackathon Acceptance Criteria Status
-
-| # | Criteria | Status |
-|---|---|---|
-| 1 | Profile creation with language selection | ✅ |
-| 2 | Due date → auto pregnancy week | ✅ |
-| 3 | Symptom log | ✅ |
-| 4 | Appointments, milestones, reminders, checklists | ✅ |
-| 5 | Kick counter + contraction timer | ✅ |
-| 6 | Baby profile + feeding + growth | ✅ |
-| 7 | Awareness content (pregnancy, vaccination, nutrition, newborn) | ✅ |
-| 8 | Emergency contacts + demo hospital resources | ✅ |
-| 9 | AI chat (demo mode + live API) | ✅ |
-| 10 | AI uses only relevant profile data | ✅ |
-| 11 | Warning signs → visible emergency escalation | ✅ |
-| 12 | Data persists after refresh | ✅ |
-| 13 | Users cannot access other users' data (localStorage is per-browser) | ✅ |
-| 14 | Mobile-first, works at 375px | ✅ |
-| 15 | Demo uses fictional data | ✅ |
-
----
-
-*MaaSaathi — Built for the IBM SipnaHackX Hackathon. This prototype requires medical-content review and verified healthcare resources before any real-world deployment.*

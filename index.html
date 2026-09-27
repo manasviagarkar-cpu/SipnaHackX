@@ -802,7 +802,7 @@
         <button class="mode-pill" id="mode-switcher-btn" onclick="openStageSwitcherModal()">
           <span id="current-mode-icon">🌱</span> <span id="current-mode-label">Pregnant (W24)</span>
         </button>
-        <button class="icon-btn-round" id="db-vault-btn" onclick="openDatabaseVaultModal()" title="Prototype Data Storage (Records Stored)" style="position:relative;">
+        <button class="icon-btn-round" id="db-vault-btn" onclick="openDatabaseVaultModal()" title="Local Demo Mode" style="position:relative;">
           🗄️
           <span id="db-status-dot" style="position:absolute; top:2px; right:2px; width:9px; height:9px; border-radius:50%; background:#f59e0b; border:2px solid #fff; box-shadow:0 0 6px #f59e0b;"></span>
         </button>
@@ -930,7 +930,7 @@ async function fetchDataFromDatabase(silent = false) {
         DB_LAST_SYNC = new Date();
         updateDbStatusDot(true);
         if (!silent) {
-          showToast('Records synced with Prototype Data Storage! 🗄️', 'success');
+          showToast('Records synced with MySQL backend! 🗄️', 'success');
           renderCurrentPage();
         }
         return true;
@@ -945,6 +945,7 @@ async function fetchDataFromDatabase(silent = false) {
 
 function updateDbStatusDot(connected) {
   const dot = document.getElementById('db-status-dot');
+  const btn = document.getElementById('db-vault-btn');
   if (dot) {
     if (connected) {
       dot.style.background = '#10b981';
@@ -953,6 +954,9 @@ function updateDbStatusDot(connected) {
       dot.style.background = '#f59e0b';
       dot.style.boxShadow = '0 0 6px #f59e0b';
     }
+  }
+  if (btn) {
+    btn.title = connected ? 'MySQL backend connected' : 'Local Demo Mode';
   }
 }
 
@@ -2046,11 +2050,11 @@ function renderRecords() {
 
         <div class="card" style="background:#f0fdf4; border:1px solid #bbf7d0;">
           <div class="flex justify-between items-center" style="margin-bottom:8px;">
-            <div class="font-bold text-sm" style="color:#15803d;">🗄️ Patient Database Vault</div>
-            <span class="badge-pill ${DB_CONNECTED ? 'badge-green' : 'badge-amber'}">${DB_CONNECTED ? '🟢 Connected' : '🟡 Offline prototype storage'}</span>
+            <div class="font-bold text-sm" style="color:#15803d;">🗄️ Prototype MySQL Storage</div>
+            <span class="badge-pill ${DB_CONNECTED ? 'badge-green' : 'badge-amber'}">${DB_CONNECTED ? '🟢 MySQL backend connected' : '🟡 Local Demo Mode'}</span>
           </div>
           <div class="text-xs text-muted" style="line-height:1.5; margin-bottom:12px;">
-            Appointments, lab records, & consultations are stored persistently in the embedded database.
+            Appointments, lab records, & consultations are stored persistently in MySQL database.
           </div>
           <div class="flex gap-6">
             <button class="btn btn-primary btn-sm" style="flex:1;" onclick="openDatabaseVaultModal()">
@@ -2297,8 +2301,14 @@ function generateCareSummary() {
     hospitalName: hospitalStr,
     ecName: ecName || t.notAdded,
     ecPhone: ecPhone || t.notAdded,
+    emergencyContact: {
+      name: ecName || t.notAdded,
+      phone: ecPhone || t.notAdded
+    },
     hasEmergencyContact: Boolean(ecName || ecPhone),
+    recentSymptoms: symptomLogs,
     symptomLogs,
+    upcomingAppointments: appointments,
     appointments,
     doctorQuestions,
     selectedLanguage,
@@ -3367,9 +3377,9 @@ async function openDatabaseVaultModal() {
   if (!modal) return;
 
   let dbStats = {
-    status: DB_CONNECTED ? 'connected' : 'local_storage',
-    engine: 'MaaSaathi Embedded JSON/SQL Data Vault',
-    storageFile: 'server/data/maasaathi_db.json',
+    status: DB_CONNECTED ? 'connected' : 'local_demo_mode',
+    engine: DB_CONNECTED ? 'MySQL' : 'Local Demo Mode (Browser Storage)',
+    database: 'maasaathi_db',
     counts: {
       users: 1,
       appointments: APP.appointments?.length || 0,
@@ -3402,7 +3412,7 @@ async function openDatabaseVaultModal() {
           <div class="flex items-center gap-10">
             <div style="width:40px; height:40px; border-radius:12px; background:var(--purple-100); display:flex; align-items:center; justify-content:center; font-size:1.4rem;">🗄️</div>
             <div>
-              <h2 style="font-size:1.25rem; font-weight:900; color:var(--dark-navy);">Patient Database Vault</h2>
+              <h2 style="font-size:1.25rem; font-weight:900; color:var(--dark-navy);">Prototype MySQL Storage</h2>
               <div class="text-xs text-muted">Persistent health records storage & synchronization</div>
             </div>
           </div>
@@ -3416,10 +3426,10 @@ async function openDatabaseVaultModal() {
               <span style="font-size:1.2rem;">${isLive ? '🟢' : '🟡'}</span>
               <div>
                 <div class="font-bold text-sm" style="color:${isLive ? '#15803d' : '#b45309'};">
-                  ${isLive ? 'Live Backend Connected' : 'Local Demo Mode (Offline Prototype Storage)'}
+                  ${isLive ? 'MySQL backend connected' : 'Local Demo Mode'}
                 </div>
                 <div class="text-xs text-muted">
-                  ${isLive ? 'Engine: ' + (dbStats.engine || 'MaaSaathi DB') : 'Offline prototype storage — all data is preserved locally in browser'}
+                  ${isLive ? 'Engine: MySQL (maasaathi_db on localhost:3306)' : 'Local Demo Mode — browser localStorage keeps your pregnancy records safe'}
                 </div>
               </div>
             </div>

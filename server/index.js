@@ -1,13 +1,14 @@
 /**
- * MaaSaathi — AI Backend & Patient Health Database Server
- * Provides:
- *   - /api/chat endpoint for Gemini and Groq AI consultations
- *   - /api/db/* and /api/records/* endpoints for persistent patient records database
- *   - /api/appointments, /api/clinical-records, /api/symptoms, /api/export, /api/import
- * 
- * Usage:
- *   npm install express cors node-fetch dotenv
- *   node server/index.js
+ * MaaSaathi — Express Backend with MySQL Persistence & AI Care Integration
+ *
+ * Architecture:
+ *   Browser frontend
+ *       ↓
+ *   Node.js + Express backend on localhost:3000
+ *       ↓
+ *   MySQL Server on localhost:3306 (maasaathi_db)
+ *       ↓
+ *   Optional Gemini or Groq API (server-side keys only)
  */
 
 require('dotenv').config({ path: require('path').join(__dirname, '..', '.env') });
@@ -23,155 +24,253 @@ const AI_PROVIDER = (process.env.AI_PROVIDER || 'gemini').toLowerCase();
 app.use(cors());
 app.use(express.json({ limit: '2mb' }));
 
-// Serve the static app from the parent directory
+// Serve the static frontend from the parent directory
 app.use(express.static(path.join(__dirname, '..')));
 
 // =============================================
-// DATABASE REST API ENDPOINTS
+// SYSTEM PROMPT — MaaSaathi Safety Rules
+// =============================================
+const SYSTEM_PROMPT = `You are MaaSaathi, a multilingual pregnancy and newborn-care awareness assistant. Respond in the user's selected language using short, simple, respectful sentences. Use only general awareness information and the structured user context provided in the request. You may explain pregnancy health awareness, vaccination awareness, maternal nutrition, newborn care, appointments, reminders, and app features.
+
+You must not diagnose a disease, interpret a medical test, prescribe medicine, recommend a dosage, guarantee that a symptom is safe, or replace a doctor. If the user describes a possible warning sign, do not diagnose it. Say that it may need urgent professional attention, advise contacting a qualified healthcare professional or local emergency services, and tell the user to open the Emergency Care page. Do not invent hospitals, phone numbers, sources, or medical facts. If you do not know the answer, say so clearly and recommend speaking with a qualified healthcare professional. End every response with one practical next action.`;
+
+// =============================================
+// 1. HEALTH & DATABASE STATUS ENDPOINTS
 // =============================================
 
-// 1. Database status & health
-app.get('/api/db/status', (req, res) => {
+// GET /api/health
+app.get('/api/health', (req, res) => {
+  res.json({
+    ok: true,
+    service: 'MaaSaathi backend',
+    database: 'mysql'
+  });
+});
+
+// GET /api/db/status
+app.get('/api/db/status', async (req, res) => {
+  if (!db.isConnected()) {
+    return res.status(503).json({
+      status: 'unavailable',
+      engine: 'MySQL',
+      database: process.env.DB_NAME || 'maasaathi_db',
+      error: 'MaaSaathi MySQL connection unavailable. Please check that MySQL Server is running and .env credentials are correct.'
+    });
+  }
+
   try {
-    const stats = db.getStats();
+    const stats = await db.getStats();
     res.json(stats);
   } catch (err) {
-    res.status(500).json({ error: 'Failed to retrieve database status', details: err.message });
+    res.status(503).json({
+      status: 'error',
+      engine: 'MySQL',
+      database: process.env.DB_NAME || 'maasaathi_db',
+      error: 'Failed to retrieve database status: ' + err.message
+    });
   }
 });
 
-// 2. Fetch all user data
-app.get('/api/records/all', (req, res) => {
+// =============================================
+// 2. USER RECORDS & SYNC ENDPOINTS
+// =============================================
+
+// GET /api/records/all
+app.get('/api/records/all', async (req, res) => {
+  if (!db.isConnected()) {
+    return res.status(503).json({ error: 'MySQL database unavailable' });
+  }
+
   try {
     const userId = req.query.userId || 'user_default';
-    const data = db.getAllUserData(userId);
+    const data = await db.getAllUserData(userId);
     res.json({ success: true, data });
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch records', details: err.message });
   }
 });
 
-// 3. Batch Sync user records from frontend
-app.post('/api/records/sync', (req, res) => {
+// POST /api/records/sync
+app.post('/api/records/sync', async (req, res) => {
+  if (!db.isConnected()) {
+    return res.status(503).json({ error: 'MySQL database unavailable' });
+  }
+
   try {
     const userId = req.body.userId || 'user_default';
     const payload = req.body.data || req.body;
-    const syncedData = db.syncUserData(userId, payload);
-    res.json({ success: true, message: 'Database successfully synced', data: syncedData });
+    const syncedData = await db.syncUserData(userId, payload);
+    res.json({ success: true, message: 'Database successfully synced to MySQL', data: syncedData });
   } catch (err) {
     res.status(500).json({ error: 'Failed to sync database', details: err.message });
   }
 });
 
-// 4. Update Profile
-app.post('/api/user/profile', (req, res) => {
+// POST /api/user/profile
+app.post('/api/user/profile', async (req, res) => {
+  if (!db.isConnected()) {
+    return res.status(503).json({ error: 'MySQL database unavailable' });
+  }
+
   try {
     const userId = req.body.userId || 'user_default';
-    const profile = db.updateProfile(userId, req.body.profile || req.body);
+    const profile = await db.updateProfile(userId, req.body.profile || req.body);
     res.json({ success: true, profile });
   } catch (err) {
     res.status(500).json({ error: 'Failed to update profile', details: err.message });
   }
 });
 
-// 5. Appointments CRUD
-app.get('/api/appointments', (req, res) => {
+// =============================================
+// 3. APPOINTMENTS CRUD
+// =============================================
+
+app.get('/api/appointments', async (req, res) => {
+  if (!db.isConnected()) {
+    return res.status(503).json({ error: 'MySQL database unavailable' });
+  }
+
   try {
     const userId = req.query.userId || 'user_default';
-    const appointments = db.getAppointments(userId);
+    const appointments = await db.getAppointments(userId);
     res.json({ success: true, appointments });
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch appointments', details: err.message });
   }
 });
 
-app.post('/api/appointments', (req, res) => {
+app.post('/api/appointments', async (req, res) => {
+  if (!db.isConnected()) {
+    return res.status(503).json({ error: 'MySQL database unavailable' });
+  }
+
   try {
     const userId = req.body.userId || 'user_default';
-    const appointment = db.addAppointment(userId, req.body.appointment || req.body);
+    const appointment = await db.addAppointment(userId, req.body.appointment || req.body);
     res.status(201).json({ success: true, appointment });
   } catch (err) {
     res.status(500).json({ error: 'Failed to create appointment', details: err.message });
   }
 });
 
-app.put('/api/appointments/:id', (req, res) => {
+app.put('/api/appointments/:id', async (req, res) => {
+  if (!db.isConnected()) {
+    return res.status(503).json({ error: 'MySQL database unavailable' });
+  }
+
   try {
     const userId = req.body.userId || 'user_default';
-    const updated = db.updateAppointment(userId, req.params.id, req.body);
+    const updated = await db.updateAppointment(userId, req.params.id, req.body);
     res.json({ success: true, appointment: updated });
   } catch (err) {
     res.status(500).json({ error: 'Failed to update appointment', details: err.message });
   }
 });
 
-app.delete('/api/appointments/:id', (req, res) => {
+app.delete('/api/appointments/:id', async (req, res) => {
+  if (!db.isConnected()) {
+    return res.status(503).json({ error: 'MySQL database unavailable' });
+  }
+
   try {
     const userId = req.query.userId || 'user_default';
-    const result = db.deleteAppointment(userId, req.params.id);
+    const result = await db.deleteAppointment(userId, req.params.id);
     res.json(result);
   } catch (err) {
     res.status(500).json({ error: 'Failed to delete appointment', details: err.message });
   }
 });
 
-// 6. Clinical Lab Records CRUD
-app.get('/api/clinical-records', (req, res) => {
+// =============================================
+// 4. CLINICAL LAB RECORDS CRUD
+// =============================================
+
+app.get('/api/clinical-records', async (req, res) => {
+  if (!db.isConnected()) {
+    return res.status(503).json({ error: 'MySQL database unavailable' });
+  }
+
   try {
     const userId = req.query.userId || 'user_default';
-    const records = db.getClinicalRecords(userId);
+    const records = await db.getClinicalRecords(userId);
     res.json({ success: true, records });
   } catch (err) {
     res.status(500).json({ error: 'Failed to fetch clinical records', details: err.message });
   }
 });
 
-app.post('/api/clinical-records', (req, res) => {
+app.post('/api/clinical-records', async (req, res) => {
+  if (!db.isConnected()) {
+    return res.status(503).json({ error: 'MySQL database unavailable' });
+  }
+
   try {
     const userId = req.body.userId || 'user_default';
-    const record = db.addClinicalRecord(userId, req.body.record || req.body);
+    const record = await db.addClinicalRecord(userId, req.body.record || req.body);
     res.status(201).json({ success: true, record });
   } catch (err) {
     res.status(500).json({ error: 'Failed to save clinical record', details: err.message });
   }
 });
 
-app.delete('/api/clinical-records/:id', (req, res) => {
+app.delete('/api/clinical-records/:id', async (req, res) => {
+  if (!db.isConnected()) {
+    return res.status(503).json({ error: 'MySQL database unavailable' });
+  }
+
   try {
     const userId = req.query.userId || 'user_default';
-    const result = db.deleteClinicalRecord(userId, req.params.id);
+    const result = await db.deleteClinicalRecord(userId, req.params.id);
     res.json(result);
   } catch (err) {
     res.status(500).json({ error: 'Failed to delete clinical record', details: err.message });
   }
 });
 
-// 7. Symptoms & Kicks
-app.post('/api/symptoms', (req, res) => {
+// =============================================
+// 5. SYMPTOMS & KICKS
+// =============================================
+
+app.post('/api/symptoms', async (req, res) => {
+  if (!db.isConnected()) {
+    return res.status(503).json({ error: 'MySQL database unavailable' });
+  }
+
   try {
     const userId = req.body.userId || 'user_default';
-    const log = db.addSymptomLog(userId, req.body.log || req.body);
+    const log = await db.addSymptomLog(userId, req.body.log || req.body);
     res.status(201).json({ success: true, log });
   } catch (err) {
     res.status(500).json({ error: 'Failed to save symptom log', details: err.message });
   }
 });
 
-app.post('/api/kicks', (req, res) => {
+app.post('/api/kicks', async (req, res) => {
+  if (!db.isConnected()) {
+    return res.status(503).json({ error: 'MySQL database unavailable' });
+  }
+
   try {
     const userId = req.body.userId || 'user_default';
-    const session = db.addKickSession(userId, req.body.session || req.body);
+    const session = await db.addKickSession(userId, req.body.session || req.body);
     res.status(201).json({ success: true, session });
   } catch (err) {
     res.status(500).json({ error: 'Failed to save kick session', details: err.message });
   }
 });
 
-// 8. Export Database Backup
-app.get('/api/export', (req, res) => {
+// =============================================
+// 6. DATABASE EXPORT & IMPORT
+// =============================================
+
+app.get('/api/export', async (req, res) => {
+  if (!db.isConnected()) {
+    return res.status(503).json({ error: 'MySQL database unavailable' });
+  }
+
   try {
     const userId = req.query.userId || 'user_default';
-    const backup = db.exportData(userId);
+    const backup = await db.exportData(userId);
     res.setHeader('Content-Disposition', `attachment; filename=maasaathi_backup_${Date.now()}.json`);
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify(backup, null, 2));
@@ -180,52 +279,33 @@ app.get('/api/export', (req, res) => {
   }
 });
 
-// 9. Import Database Backup
-app.post('/api/import', (req, res) => {
+app.post('/api/import', async (req, res) => {
+  if (!db.isConnected()) {
+    return res.status(503).json({ error: 'MySQL database unavailable' });
+  }
+
   try {
     const userId = req.body.userId || 'user_default';
-    const restored = db.importData(userId, req.body.backup || req.body);
-    res.json({ success: true, message: 'Database successfully restored', data: restored });
+    const restored = await db.importData(userId, req.body.backup || req.body);
+    res.json({ success: true, message: 'Database successfully restored to MySQL', data: restored });
   } catch (err) {
     res.status(400).json({ error: 'Failed to import backup', details: err.message });
   }
 });
 
-// 10. Innovation B: Caregiver Relay / One-Page Care Summary Endpoint
-app.get('/api/care-summary', (req, res) => {
+// =============================================
+// 7. CAREGIVER RELAY / ONE-PAGE CARE SUMMARY ENDPOINT
+// =============================================
+
+app.get('/api/care-summary', async (req, res) => {
+  if (!db.isConnected()) {
+    return res.status(503).json({ error: 'MySQL database unavailable' });
+  }
+
   try {
     const userId = req.query.userId || 'user_default';
     const lang = req.query.lang === 'hi' ? 'hi' : 'en';
-    const userData = db.getAllUserData(userId);
-    const p = userData.profile || {};
-    const appointments = (userData.appointments || []).filter(a => !a.done);
-    const symptoms = (userData.symptomLogs || []).slice(0, 5);
-    const questions = userData.doctorQuestions || [];
-
-    const summary = {
-      userName: p.name || (lang === 'hi' ? 'डेमो यूजर' : 'Demo User'),
-      pregnancyStatus: p.status || 'pregnant',
-      edd: p.edd || null,
-      city: p.city || null,
-      doctorName: p.doctorName || null,
-      hospitalName: p.hospitalName || null,
-      emergencyContact: {
-        name: p.ec_name || null,
-        phone: p.ec_phone || null
-      },
-      recentSymptoms: symptoms,
-      upcomingAppointments: appointments,
-      doctorQuestions: questions,
-      language: lang === 'hi' ? 'Hindi (हिंदी)' : 'English',
-      generatedAt: new Date().toISOString(),
-      disclaimer: lang === 'hi'
-        ? 'यह सारांश जागरूकता और योग्य स्वास्थ्यकर्मी से चर्चा के लिए है। यह निदान, दवा की सलाह या आपातकालीन उपचार नहीं है। किसी संभावित खतरे के संकेत पर तुरंत योग्य स्वास्थ्यकर्मी या स्थानीय आपातकालीन सेवा से संपर्क करें।'
-        : 'This summary is for awareness and discussion with a qualified healthcare professional. It is not a diagnosis, prescription or emergency treatment. If there is a possible warning sign, contact a qualified healthcare professional or local emergency service immediately.',
-      demoDisclaimer: lang === 'hi'
-        ? 'डेमो मोड: यहां दिखाए गए नाम, अपॉइंटमेंट, अस्पताल और स्वास्थ्य रिकॉर्ड केवल प्रस्तुति के लिए नमूना डेटा हैं।'
-        : 'Demo mode: Names, appointments, hospitals and health records shown here are sample data for presentation only.'
-    };
-
+    const summary = await db.getCareSummaryData(userId, lang);
     res.json({ success: true, summary });
   } catch (err) {
     res.status(500).json({ error: 'Failed to generate care summary', details: err.message });
@@ -233,15 +313,9 @@ app.get('/api/care-summary', (req, res) => {
 });
 
 // =============================================
-// SYSTEM PROMPT — MaaSaathi AI Safety Rules
+// 8. AI CONSULTATION ENDPOINT (/api/chat)
 // =============================================
-const SYSTEM_PROMPT = `You are MaaSaathi, a multilingual pregnancy and newborn-care awareness assistant. Respond in the user's selected language using short, simple, respectful sentences. Use only approved awareness content and the structured user context provided in the request. You may explain pregnancy health awareness, vaccination awareness, maternal nutrition, newborn care, appointments, reminders, and app features.
 
-You must not diagnose a disease, interpret a medical test, prescribe medicine, recommend a dosage, guarantee that a symptom is safe, or replace a doctor. If the user describes a possible warning sign, do not diagnose it. Say that it may need urgent professional attention, advise contacting a qualified healthcare professional or local emergency services, and tell the user to open the Get Help Now page. Do not invent hospitals, phone numbers, sources, or medical facts. If you do not know the answer, say so clearly and recommend speaking with a qualified healthcare professional. End every response with one practical next action.`;
-
-// =============================================
-// /api/chat endpoint
-// =============================================
 app.post('/api/chat', async (req, res) => {
   const { message, context, language, userId } = req.body;
 
@@ -249,7 +323,23 @@ app.post('/api/chat', async (req, res) => {
     return res.status(400).json({ error: 'Invalid request' });
   }
 
-  // Build context string for the AI
+  const isHindi = language === 'hi';
+  const apiKey = AI_PROVIDER === 'gemini' ? process.env.GEMINI_API_KEY : process.env.GROQ_API_KEY;
+
+  // Safe demo fallback if AI API key is not configured on the server
+  if (!apiKey || !apiKey.trim()) {
+    const demoReply = isHindi
+      ? `[डेमो उत्तर: सर्वर पर AI कुंजी कॉन्फ़िगर नहीं है]\n\nनमस्ते! गर्भावस्था के दौरान उचित पोषण, पर्याप्त जलपान और नियमित डॉक्टर परामर्श आवश्यक हैं। किसी भी असहजता या चेतावनी संकेत पर तुरंत अपने योग्य चिकित्सक से संपर्क करें। 🌸`
+      : `[Demo response: AI key not configured on server]\n\nDear Maa, every pregnancy journey is unique! Ensure balanced nutrition, drink plenty of water, and attend your scheduled prenatal checkups. For any specific medical concerns or symptoms, always consult your qualified healthcare professional. 🌸`;
+
+    // Optionally log to database if connected
+    await db.addChatMessage(userId || 'user_default', { role: 'user', message_text: message });
+    await db.addChatMessage(userId || 'user_default', { role: 'assistant', message_text: demoReply });
+
+    return res.json({ reply: demoReply, isDemo: true });
+  }
+
+  // Build structured context string for live AI call
   let contextStr = '';
   if (context) {
     if (context.name) contextStr += `User name: ${context.name}. `;
@@ -260,9 +350,9 @@ app.post('/api/chat', async (req, res) => {
     if (context.recentSymptoms?.length) contextStr += `Recent symptoms: ${context.recentSymptoms.map(s => s.description).join(', ')}. `;
   }
 
-  const languageInstr = language === 'hi'
-    ? 'Respond in Hindi (हिंदी) using simple, clear sentences.'
-    : 'Respond in English using simple, clear sentences.';
+  const languageInstr = isHindi
+    ? 'Respond in Hindi (हिंदी) using simple, respectful sentences.'
+    : 'Respond in English using simple, respectful sentences.';
 
   const fullPrompt = contextStr
     ? `${languageInstr}\n\nUser context: ${contextStr}\n\nUser question: ${message}`
@@ -279,22 +369,21 @@ app.post('/api/chat', async (req, res) => {
     }
 
     // Persist conversation to database
-    try {
-      db.addChatMessage(userId || 'user_default', { role: 'user', text: message });
-      db.addChatMessage(userId || 'user_default', { role: 'assistant', text: reply });
-    } catch (e) {
-      console.error('Failed to log chat to DB:', e.message);
-    }
+    await db.addChatMessage(userId || 'user_default', { role: 'user', message_text: message });
+    await db.addChatMessage(userId || 'user_default', { role: 'assistant', message_text: reply });
 
-    return res.json({ reply });
+    return res.json({ reply, isDemo: false });
   } catch (err) {
     console.error('AI call failed:', err.message);
-    return res.status(503).json({ error: 'AI service temporarily unavailable. Please try again.' });
+    const fallbackReply = isHindi
+      ? `[डेमो उत्तर: AI सेवा अस्थायी रूप से अनुपलब्ध है]\n\nनमस्ते! गर्भावस्था के दौरान नियमित जांच और स्वस्थ जीवनशैली बनाए रखें। किसी भी चिंता के लिए अपने चिकित्सक से संपर्क करें।`
+      : `[Demo response: AI service temporarily unavailable]\n\nDear Maa, please consult your qualified doctor or healthcare professional for personalized guidance.`;
+    return res.json({ reply: fallbackReply, isDemo: true, error: err.message });
   }
 });
 
 // =============================================
-// Gemini API call
+// Gemini API Call (Server-side)
 // =============================================
 async function callGemini(prompt) {
   const apiKey = process.env.GEMINI_API_KEY;
@@ -309,8 +398,8 @@ async function callGemini(prompt) {
     generationConfig: { maxOutputTokens: 512, temperature: 0.4 }
   };
 
-  const { default: fetch } = await import('node-fetch');
-  const res = await fetch(url, {
+  const fetchFn = typeof fetch !== 'undefined' ? fetch : (await import('node-fetch')).default;
+  const res = await fetchFn(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
     body: JSON.stringify(body)
@@ -318,7 +407,7 @@ async function callGemini(prompt) {
 
   if (!res.ok) {
     const errText = await res.text();
-    throw new Error(`Gemini API error ${res.status}`);
+    throw new Error(`Gemini API error ${res.status}: ${errText}`);
   }
 
   const data = await res.json();
@@ -326,7 +415,7 @@ async function callGemini(prompt) {
 }
 
 // =============================================
-// Groq API call (OpenAI-compatible)
+// Groq API Call (Server-side)
 // =============================================
 async function callGroq(prompt) {
   const apiKey = process.env.GROQ_API_KEY;
@@ -345,30 +434,43 @@ async function callGroq(prompt) {
     temperature: 0.4
   };
 
-  const { default: fetch } = await import('node-fetch');
-  const res = await fetch(url, {
+  const fetchFn = typeof fetch !== 'undefined' ? fetch : (await import('node-fetch')).default;
+  const res = await fetchFn(url, {
     method: 'POST',
     headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${apiKey}` },
     body: JSON.stringify(body)
   });
 
-  if (!res.ok) throw new Error(`Groq API error ${res.status}`);
+  if (!res.ok) {
+    const errText = await res.text();
+    throw new Error(`Groq API error ${res.status}: ${errText}`);
+  }
 
   const data = await res.json();
   return data?.choices?.[0]?.message?.content || 'I was unable to generate a response. Please try again.';
 }
 
 // =============================================
-// Serve index.html for all other routes
+// Catch-all: Serve index.html
 // =============================================
 app.get('*', (req, res) => {
   res.sendFile(path.join(__dirname, '..', 'index.html'));
 });
 
-app.listen(PORT, () => {
-  console.log(`\n🌸 MaaSaathi server running on http://localhost:${PORT}`);
-  console.log(`   🗄️  Database: Connected (server/data/maasaathi_db.json)`);
-  console.log(`   AI Provider: ${AI_PROVIDER.toUpperCase()}`);
-  console.log(`   API Key: ${process.env[AI_PROVIDER.toUpperCase()+'_API_KEY'] ? '✅ Configured' : '❌ Not configured (demo mode)'}`);
-  console.log(`\n   Open http://localhost:${PORT} in your browser\n`);
-});
+// =============================================
+// Start Server & Connect to MySQL
+// =============================================
+(async () => {
+  await db.initializeDatabase();
+
+  app.listen(PORT, () => {
+    const hasKey = AI_PROVIDER === 'gemini' ? Boolean(process.env.GEMINI_API_KEY) : Boolean(process.env.GROQ_API_KEY);
+    console.log(`\n🌸 MaaSaathi server running on http://localhost:${PORT}`);
+    console.log(`   🗄️  Database Engine: MySQL (localhost:${process.env.DB_PORT || 3306})`);
+    console.log(`   Database Name: ${process.env.DB_NAME || 'maasaathi_db'}`);
+    console.log(`   Database Status: ${db.isConnected() ? '✅ Connected' : '❌ Connection failed'}`);
+    console.log(`   AI Provider: ${AI_PROVIDER.toUpperCase()}`);
+    console.log(`   AI API Key: ${hasKey ? '✅ Configured' : '⚠️ Not configured (safe demo response mode)'}`);
+    console.log(`\n   Open http://localhost:${PORT} in your browser\n`);
+  });
+})();
